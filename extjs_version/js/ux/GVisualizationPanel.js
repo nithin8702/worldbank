@@ -1,4 +1,4 @@
-Ext.ux.wbGDataTableColumnAdapter = function(config) {
+Ext.ux.wbGDataTableBuilderAdapter = function(columns) {
     // hashmap to convert from Ext data types
     // datatypes
     var convert = {
@@ -10,31 +10,45 @@ Ext.ux.wbGDataTableColumnAdapter = function(config) {
         'date':'date'
     };
     var tbl = new google.visualization.DataTable();
-    var cols = config.columns;
-    Ext.each(cols, function(node, index){
-    	index = store.fields.getCount() > index ? store.fields.getCount() : index;
-    	var f = store.fields.get(index);
-    	tbl.addColumn(convert[f.type.type], c.label || c, id);
+    Ext.each(columns, function(node, index){
+    	indexVal = store.fields.getCount() < index ? index : store.fields.getCount();
+    	var f = store.fields.get(indexVal);
+    	tbl.addColumn(convert[f.type.type], node.text, node.id);
     });
     return tbl;
 }
 
 Ext.ux.wbGDataTableAdapter = function(config) {
-      
+    // hashmap to convert from Ext data types
+    // datatypes
+    var convert = {
+        'auto': 'string',
+        'string': 'string',
+        'int': 'number',
+        'float': 'number',
+        'boolean': 'boolean',
+        'date':'date'
+    };
+
     return {
         adapt: function(config) {
             var store = Ext.StoreMgr.lookup(config.store || config.ds);
             var tbl = new google.visualization.DataTable();
-            var cols = config.columns;
-            Ext.each(cols, function(node){
-            	tbl.addColumn(convert[f.type.type], c.label || c, id);
-                msg += node.text;
-                Ext.each(store.data.items, function(val, key) {
-                    console.log(val);
-                    console.log(key);
-                });
+            Ext.each(columns, function(node, index){
+            	indexVal = store.fields.getCount() > index ? index : store.fields.getCount();
+            	var f = store.fields.get(indexVal);
+            	tbl.addColumn(convert[f.type.type], node.text, node.id);
             });
-
+        	store.filter([fn: function(record) { return record.get('country').name == columns.pop().text }]);
+        	tbl.addRows(store.getTotalCount());
+            Ext.each(columns, function(node, index){
+            	store.filter([fn: function(record) { return record.get('country').name == node.text }]);
+	            Ext.each(store.data.items, function(val, key) {
+	                console.log(val);
+	                console.log(key);
+	            });
+            });
+            
             for (var i = 0; i < cols.length; i++) {
                 var c = cols[i];
                 var id = c.dataIndex || c;
@@ -163,7 +177,7 @@ Ext.ux.GVisualizationPanel = Ext.extend(Ext.Panel, {
             store: this.store,
             columns: this.columns
         };
-        this.datatable = Ext.ux.GDataTableAdapter.adapt(tableCfg);
+        this.datatable = Ext.ux.wbGDataTableAdapter.adapt(tableCfg);
         
         var cls = this.visualizationPkgs[this.visualizationPkg];
         this.body.update('');
