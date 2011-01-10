@@ -39,16 +39,17 @@ Ext.ux.wbGDataTableAdapter = function(config) {
             	var f = store.fields.get(indexVal);
             	tbl.addColumn(convert[f.type.type], node.text, node.id);
             });
-        	store.filter([fn: function(record) { return record.get('country').name == columns.pop().text }]);
+        	store.filterBy(function(record,id) { return record.get('country').name == columns.pop().text } );
         	tbl.addRows(store.getTotalCount());
             Ext.each(columns, function(node, index){
-            	store.filter([fn: function(record) { return record.get('country').name == node.text }]);
+            	store.filterBy(function(record, id) { return record.get('country').name == node.text } );
 	            Ext.each(store.data.items, function(val, key) {
+	            	tbl.setValue(key, index, rs[i].get(fld.name));
 	                console.log(val);
 	                console.log(key);
 	            });
             });
-            
+
             for (var i = 0; i < cols.length; i++) {
                 var c = cols[i];
                 var id = c.dataIndex || c;

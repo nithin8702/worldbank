@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Google Table Example using World Bank Data</title>
+
+    <link type="text/css" href="http://localhost/lib/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.css" rel="stylesheet"/>
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.filter.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="http://localhost/lib/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="http://localhost/lib/jquery-ui/js/jquery-ui-1.8.7.custom.min.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.filter.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/js/columns_info.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/lib/wb_converter.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/lib/print_r.js"></script>
+
+    <script language="Javascript" type="text/javascript">
+    //<![CDATA[
+
+    $(document).ready(function(){
+
+	// var lenders_url = "/tmp/kiva_ds_json/lenders/1.json";
+        var lenders_url = "/tmp/kiva/newest.json";
+        $.getJSON(lenders_url, function(response) {
+            $.each(response['loans'] , function(key, value) {
+                $.each(value , function(nestedKey, nestedValue) {
+                    console.log( "key : " + nestedKey + " ; value : " + nestedValue );
+                });
+            });
+        });
+
+        // var loans_url = "/tmp/kiva_ds_json/loans/1.json";
+        var loans_url = "/tmp/kiva/search.json";
+        $.getJSON(loans_url, function(response) {
+            $.each(response['loans'] , function(key, value) {
+                /// console.log( "key : " + key + " ; value : " + value );
+            });
+            // console.log(print_r(jsonData));
+        });
+
+        var partners_url = "/tmp/kiva/partners.json";
+        $.getJSON(partners_url, function(response) {
+            console.log( " =========================================== partners list ==================================== ");
+            console.log( " =========================================== partners list ==================================== ");
+            console.log( " =========================================== partners list ==================================== ");
+            $.each(response['partners'] , function(key, value) {
+                $.each(value , function(nestedKey, nestedValue) {
+                    // console.log( "key : " + nestedKey + " ; value : " + nestedValue );
+                });
+            });
+        });
+
+    });
+    //]]>
+    </script>
+  </head>
+  <body>
+	<div><br/></div>
+    	<div id="indicator_table_div">Loading...</div>
+  </body>
+</html>
