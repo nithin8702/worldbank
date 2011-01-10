@@ -1,0 +1,9 @@
+.header			{ background: #012d52; color: #FFF;}
+
+.content		{ background: #EEE; }
+
+.sidebar		{ background: #9bc911; }
+
+.footer			{ background: #012d52; color: #FFF; }
+
+.container 		{ padding:5px; margin:2px; border:solid 1px #666; }
