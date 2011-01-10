@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Google Area Chart Example using World Bank Data developed by pyg</title>
+
+    <link type="text/css" href="http://localhost/lib/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.css" rel="stylesheet"/>
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.filter.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="http://localhost/lib/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="http://localhost/lib/jquery-ui/js/jquery-ui-1.8.7.custom.min.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.filter.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/js/columns_info.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/lib/wb_converter.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/lib/print_r.js"></script>
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <script language="Javascript" type="text/javascript">
+    //<![CDATA[
+
+    google.load('visualization', '1', {'packages' : ['table', 'corechart']});
+
+    $(document).ready(function(){
+
+        // Tabs
+        $('#tabs').tabs();
+
+        // Dialog			
+	$('#dialog').dialog({
+		autoOpen: false,
+		width: 600,
+		buttons: {
+			"Ok": function() { 
+				$(this).dialog("close"); 
+			}, 
+			"Cancel": function() { 
+				$(this).dialog("close"); 
+			} 
+		}
+	});
+
+	var countries_url = "/worldbank/json/countries.json";
+        $.getJSON(countries_url, function(response) {
+            var cols = $.convertWBData(response[1]);
+            var jsonData = $.extend(country, cols);
+
+            var GDataTable = new google.visualization.DataTable(jsonData);
+            var GDataView = new google.visualization.DataView(GDataTable);
+            var rowLength = GDataView.getNumberOfRows();
+            for (var idx = 0; idx < rowLength; idx++) {
+                var value = GDataView.getValue(idx, 1);
+                var label = GDataView.getValue(idx, 2);
+                $("#countryCode").append("<option value=" + value + ">" + label + "</option>");
+            }
+
+            $("#countryCode").multiselect({
+      		noneSelectedText: 'Select countries',
+      		selectedList: 10,
+                selectedText: function(numChecked, numTotal, checkedItems) {
+                    // print_r(checkedItems);
+                    console.log(checkedItems.value);
+                    return numChecked + ' of ' + numTotal + ' checked';
+                },
+                close: function() {
+                    var array_of_checked_values = $("select").multiselect("getChecked").map(function(){ return this.value; });
+                    var lineChartDT = new google.visualization.DataTable();
+                    var columnIdx = new Array();
+                    for (var idx = 0; idx < array_of_checked_values.length; idx++) {
+                        var newGDT = getData( array_of_checked_values[idx], $("#indicatorCode").val() );
+                        if (idx == 0) {
+                            lineChartDT = new google.visualization.data.join(newGDT, newGDT, 'left', [[6,6],[4,4]], [], []); 
+                        } else {
+                            columnIdx.push(idx);
+                            lineChartDT = new google.visualization.data.join(lineChartDT, newGDT, 'left', [[0,6]],columnIdx,[4]); 
+                        }
+                    }
+
+                    // Create and draw the visualization.
+                    var ac = new google.visualization.AreaChart(document.getElementById('areaChart_div'));
+                    ac.draw(lineChartDT, {
+                         title : 'Monthly Coffee Production by Country',
+                         isStacked: true,
+                         width: 600,
+                         height: 400,
+                         vAxis: {title: "Cups"},
+                         hAxis: {title: "Month"}
+                    });
+                    console.log(print_r(lineChartDT));
+                }
+           }).multiselectfilter();
+        });
+
+
+        var sources_url = "/worldbank/json/sources.json";
+        $.getJSON(sources_url, function(response) {
+            var cols = $.convertWBData(response[1]);
+            var jsonData = $.extend(source_list, cols);
+
+            var GDataTable = new google.visualization.DataTable(jsonData);
+            var GDataView = new google.visualization.DataView(GDataTable);
+            var rowLength = GDataView.getNumberOfRows();
+            for (var idx = 0; idx < rowLength; idx++) {
+                var value = GDataView.getValue(idx, 0);
+                var label = GDataView.getValue(idx, 1);
+                $("#sourceCode").append("<option value=" + value + ">" + label + "</option>");
+            }
+        });
+
+       $("#sourceCode").change( function() {
+           // $("#selectionresult").hide();
+           // $("#result").html(Retrieving ...);
+           var indicator_url = "/worldbank/json/source/"+$("#sourceCode").val()+"/indicators.json";
+           $.getJSON(indicator_url, function(response) {
+               var cols = $.convertWBData(response[1]);
+               var jsonData = $.extend(source_indicator, cols);
+
+               var GDataTable = new google.visualization.DataTable(jsonData);
+               var GDataView = new google.visualization.DataView(GDataTable);
+               var rowLength = GDataView.getNumberOfRows();
+               $('#indicatorCode').empty().append('<option selected="selected" value=""></option>'); // clear all options
+               for (var idx = 0; idx < rowLength; idx++) {
+                   var value = GDataView.getValue(idx, 0);
+                   var label = GDataView.getValue(idx, 1);
+                   $("#indicatorCode").append("<option value=" + value + ">" + label + "</option>");
+               }
+           });
+        });
+
+        $("#indicatorCode").change( function() {
+  	    var proxy_url = "/lib/ajax-proxy.php?route=";
+  	    var url = "/countries/kr/indicators/"+ $("#indicatorCode").val() +"?format=json&date=2000:2001";
+            $.getJSON(proxy_url + url, function(response) {
+                var cols = $.convertWBData(response[1]);
+                var jsonData = $.extend(indicator, cols);
+                // console.log(print_r(jsonData));
+
+                var data = new google.visualization.DataTable(jsonData);
+                var table = new google.visualization.Table(document.getElementById('indicator_table_div'));
+                table.draw(data, {showRowNumber: true});
+            });
+        });
+
+        function getData( countryCode, indicatorCode ) {
+  	    var proxy_url = "/lib/ajax-proxy.php?route=";
+  	    var url = "/countries/" + countryCode + "/indicators/"+ indicatorCode +"?format=json";
+            var data = null;
+            $.ajaxSetup( { "async": false } );
+            $.getJSON(proxy_url + url, function(response) {
+                if (response.length) {
+                    var cols = $.convertWBData(response[1]);
+                    var jsonData = $.extend(indicator, cols);
+                    // console.log(print_r(jsonData));
+
+                    data = new google.visualization.DataTable(jsonData);
+                }
+            });
+            $.ajaxSetup( { "async": true } );
+            return data;
+        }
+    });
+    //]]>
+    </script>
+  </head>
+  <body>
+	<!-- Select Tabs -->
+	<div id="tabs">
+		<ul>
+			<li><a href="#tabs-1">Source</a></li>
+			<li><a href="#tabs-2">Country</a></li>
+			<li><a href="#tabs-3">Third</a></li>
+		</ul>
+		<div id="tabs-1">
+			<label for="sourceCode">Source : </label>
+			<select id="sourceCode"><option value=""></option></select>
+			<label for="indicatorCode">Indicator : </label>
+			<select id="indicatorCode"><option value=""></option></select>
+		</div>
+		<div id="tabs-2">
+			<label for="countryCode">Country : </label>
+			<select id="countryCode"></select>
+		</div>
+		<div id="tabs-3"></div>
+	</div>
+    	<div id="areaChart_div">Loading...</div>
+	<div><br/></div>
+    	<div id="indicator_table_div">Loading...</div>
+  </body>
+</html>

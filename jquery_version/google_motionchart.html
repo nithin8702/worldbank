@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Google Motion Chart Example using World Bank Data developed by pyg</title>
+
+    <link type="text/css" media="all" href="./css/elastic.css" rel="stylesheet" />
+    <link type="text/css" media="all" href="./css/default.css" rel="stylesheet" />
+    <link type="text/css" href="http://localhost/lib/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />   
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.css" rel="stylesheet"/>
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.filter.css" rel="stylesheet"/>
+    <link type="text/css" href="./css/redmond/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
+    <link type="text/css" href="./css/ui.slider.extras.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="http://localhost/lib/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="./js/elastic.js"></script>
+    <script type="text/javascript" src="http://localhost/lib/jquery-ui/js/jquery-ui-1.8.7.custom.min.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.filter.js"></script>
+    <script type="text/javascript" src="./js/selectToUISlider.jQuery.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/js/columns_info.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/lib/wb_converter.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/lib/print_r.js"></script>
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <script language="Javascript" type="text/javascript">
+    //<![CDATA[
+
+    google.load('visualization', '1', {'packages' : ['table', 'motionchart']});
+
+    $(document).ready(function(){
+        var wb_host = "http://api.worldbank.org";
+
+        $('#header').load('templates/header.html' , function() {
+            var sources_url = "/worldbank/json/sources.json";
+            $.getJSON(sources_url, function(response) {
+                var cols = $.convertWBData(response[1]);
+                var jsonData = $.extend(source_list, cols);
+
+                var GDataTable = new google.visualization.DataTable(jsonData);
+                var GDataView = new google.visualization.DataView(GDataTable);
+                var rowLength = GDataView.getNumberOfRows();
+                for (var idx = 0; idx < rowLength; idx++) {
+                    var value = GDataView.getValue(idx, 0);
+                    var label = GDataView.getValue(idx, 1);
+                    $("#sourceCode").append("<option value=" + value + ">" + label + "</option>");
+                }
+            });
+
+            $("#sourceCode").change( function() {
+                // $("#selectionresult").hide();
+                // $("#result").html(Retrieving ...);
+                var indicator_url = "/worldbank/json/source/"+$("#sourceCode").val()+"/indicators.json";
+               $.getJSON(indicator_url, function(response) {
+                   var cols = $.convertWBData(response[1]);
+                   var jsonData = $.extend(source_indicator, cols);
+
+                   var GDataTable = new google.visualization.DataTable(jsonData);
+                   var GDataView = new google.visualization.DataView(GDataTable);
+                   var rowLength = GDataView.getNumberOfRows();
+                   $('#indicatorCode').empty().append('<option selected="selected" value=""></option>'); // clear all options
+                   for (var idx = 0; idx < rowLength; idx++) {
+                       var value = GDataView.getValue(idx, 0);
+                       var label = GDataView.getValue(idx, 1);
+                       $("#indicatorCode").append("<option value=" + value + ">" + label + "</option>");
+                   }
+               });
+            });
+
+            // Tabs
+            $('#tabs').tabs();
+
+            var now = new Date();
+            var thisYear = now.getFullYear();
+            for (var idx = 0; idx < 50; idx++) {
+                var yearVal = parseInt( thisYear - idx );
+                $("#yearFrom").append("<option value=" + yearVal + ">" + yearVal + " year </option>");
+                $("#yearTo").append("<option value=" + yearVal + ">" + yearVal + " year </option>");
+            }
+            $('select#yearFrom, select#yearTo').selectToUISlider({
+                labels: 12
+            });
+        });
+
+        // Dialog			
+	$('#dialog').dialog({
+		autoOpen: false,
+		width: 600,
+		buttons: {
+			"Ok": function() { 
+				$(this).dialog("close"); 
+			}, 
+			"Cancel": function() { 
+				$(this).dialog("close"); 
+			} 
+		}
+	});
+
+	var countries_url = "/worldbank/json/countries.json";
+        $.getJSON(countries_url, function(response) {
+            var cols = $.convertWBData(response[1]);
+            var jsonData = $.extend(country, cols);
+
+            var GDataTable = new google.visualization.DataTable(jsonData);
+            var GDataView = new google.visualization.DataView(GDataTable);
+            var rowLength = GDataView.getNumberOfRows();
+            for (var idx = 0; idx < rowLength; idx++) {
+                var value = GDataView.getValue(idx, 1);
+                var label = GDataView.getValue(idx, 2);
+                $("#countryCode").append("<option value=" + value + ">" + label + "</option>");
+            }
+
+            $("#countryCode").multiselect({
+      		noneSelectedText: 'Select countries',
+      		selectedList: 10,
+                selectedText: function(numChecked, numTotal, checkedItems) {
+                    // print_r(checkedItems);
+                    console.log(checkedItems.value);
+                    return numChecked + ' of ' + numTotal + ' checked';
+                },
+                close: function() {
+                    var array_of_checked_values = $("select").multiselect("getChecked").map(function(){ return this.value; });
+                    var proxy_url = "./proxy.php?url="+wb_host;
+                    var selected_countries = $.makeArray(array_of_checked_values).join(";");
+                    var url = "/countries/"+ selected_countries +"/indicators/"+ $("#indicatorCode").val() +"?format=json&per_page=10000";
+                    $.getJSON(proxy_url + url, function(response) {
+                        var each_country_line =  parseInt(response[0]['total']) / array_of_checked_values.length;
+                        var cols = $.convertWBData(response[1]);
+                        var jsonData = $.extend(indicator, cols);
+                        // console.log(print_r(jsonData));
+
+                        var data = new google.visualization.DataTable(jsonData);
+                        data.sort([{column: 6}]);
+                        var view = new google.visualization.DataView(data);
+                        view.setColumns([3, 6, 4]);
+
+                        var chart = new google.visualization.MotionChart(document.getElementById('motionChart_div'));
+                        chart.draw(view, {width: 800, height:500});
+
+                        var table = new google.visualization.Table(document.getElementById('indicator_table_div'));
+                        table.draw(view, {showRowNumber: true});
+                    });
+                }
+           }).multiselectfilter();
+        });
+
+
+        $("#indicatorCode").change( function() {
+  	    var proxy_url = "./proxy.php?url="+wb_host;
+  	    var url = "/countries/kr/indicators/"+ $("#indicatorCode").val() +"?format=json&date=2000:2001";
+            $.getJSON(proxy_url + url, function(response) {
+                var cols = $.convertWBData(response[1]);
+                var jsonData = $.extend(indicator, cols);
+                // console.log(print_r(jsonData));
+
+                // var data = new google.visualization.DataTable(jsonData);
+                // var table = new google.visualization.Table(document.getElementById('indicator_table_div'));
+                // table.draw(data, {showRowNumber: true});
+            });
+        });
+
+/* =========================================================================
+        function getData( countryCode, indicatorCode ) {
+  	    var proxy_url = "./proxy.php?url="+wb_host;
+  	    var url = "/countries/" + countryCode + "/indicators/"+ indicatorCode +"?format=json";
+            var data = null;
+            $.ajaxSetup( { "async": false } );
+            $.getJSON(proxy_url + url, function(response) {
+                if (response.length) {
+                    var cols = $.convertWBData(response[1]);
+                    var jsonData = $.extend(indicator, cols);
+                    // console.log(print_r(jsonData));
+
+                    data = new google.visualization.DataTable(jsonData);
+                }
+            });
+            $.ajaxSetup( { "async": true } );
+            return data;
+        }
+ ========================================================================= */
+    });
+    //]]>
+    </script>
+  </head>
+  <body>
+      <div class="unit position-body">
+          <div id="motionChart_div">Loading...</div>
+          <div><br/></div>
+          <div id="indicator_table_div">Loading...</div>
+      </div>
+      <div class="unit position-header">
+          <div id="header"></div>
+      </div>
+      <div class="unit columns position-footer">
+          <div class="column">1</div>
+          <div class="column">2</div>
+          <div class="column">3</div>
+      </div>
+      <div class="unit position-sidebar">
+          <div style="height:400px">THIS IS ON THE SIDE</div>
+      </div>
+      <div class="unit horizontal-center" style="width:97%;">
+          <div class="display header"></div>
+          <div class="columns layout">
+              <div class="column elastic display body"></div>
+              <div class="column fixed display sidebar" style="width:300px;"></div>
+          </div>
+          <div class="display footer"></div>
+      </div>
+  </body>
+</html>

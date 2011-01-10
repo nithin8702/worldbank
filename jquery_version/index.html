@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>World Bank Data visualization by topic developed by pyg</title>
+
+    <link type="text/css" media="all" href="./css/elastic.css" rel="stylesheet" />
+    <link type="text/css" media="all" href="./css/default.css" rel="stylesheet" />
+    <link type="text/css" href="http://localhost/lib/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.css" rel="stylesheet"/>
+    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.filter.css" rel="stylesheet"/>
+    <link type="text/css" href="./css/redmond/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
+    <link type="text/css" href="./css/ui.slider.extras.css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="http://localhost/lib/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="./js/elastic.js"></script>
+    <script type="text/javascript" src="http://localhost/lib/jquery-ui/js/jquery-ui-1.8.7.custom.min.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.filter.js"></script>
+    <script type="text/javascript" src="./js/selectToUISlider.jQuery.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/js/columns_info.js"></script>
+
+    <script type="text/javascript" src="http://localhost/worldbank/lib/wb_converter.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/lib/print_r.js"></script>
+    <script type="text/javascript" src="http://localhost/worldbank/js/menu_right.js"></script>
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <style type="text/css">
+        #loadingScreen {
+            background: url(images/loading.gif) no-repeat 5px 8px;
+            padding-left: 25px;
+        }
+        /* hide the close x on the loading screen */
+        .loadingScreenWindow .ui-dialog-titlebar-close {
+            display: none;
+        }
+    </style>
+
+
+    <script language="Javascript" type="text/javascript">
+    //<![CDATA[
+
+    google.load('visualization', '1', {'packages' : ['table', 'corechart', 'geomap', 'motionchart']});
+
+    $(window).load(function(){  
+        // google.load('visualization', '1', {'packages' : ['table', 'corechart', 'geomap']});
+    });
+
+    $(document).ready(function(){
+
+        // loading Dialog
+	// create the loading window and set autoOpen to false
+	$("#loadingDialog").dialog({
+		autoOpen: false,	// set this to false so we can manually open it
+		dialogClass: "loadingScreenWindow",
+		closeOnEscape: false,
+		draggable: false,
+		width: 460,
+		minHeight: 50, 
+		modal: true,
+		buttons: {},
+		resizable: false,
+		open: function() {
+			// scrollbar fix for IE
+			$('body').css('overflow','hidden');
+		},
+		close: function() {
+			// reset overflow
+			$('body').css('overflow','auto');
+		}
+	}); // end of dialog
+        $("#loadingDialog").html('Please wait...');
+        $("#loadingDialog").dialog('option', 'title', 'Loading');
+
+
+        // Button
+        $("#source_btn").button().click( function() {
+            $('#loadingDialog').dialog( "open" );
+            $('#header').load('templates/source_header.html' , function() {
+                $.getScript('./js/source_header.js', function() {
+                    $.getScript('./js/common_header.js', function() { 
+                        $('#loadingDialog').dialog( "close" ); 
+                    });
+                });
+            });
+            
+        });
+        $("#topic_btn").button().click( function() {
+            $('#loadingDialog').dialog( "open" );
+            $('#header').load('templates/topic_header.html' , function() {
+                $.getScript('./js/topic_header.js', function() {
+                    $.getScript('./js/common_header.js', function() { 
+                        $('#loadingDialog').dialog( "close" ); 
+                    });
+                });
+            });
+        });
+
+        $("#source_btn").click();
+
+        $('#right_menu').load('./templates/menu_right.html' , function() {
+            $.getScript('./js/menu_right.js', function() {
+
+            });
+        });
+
+    });
+    //]]>
+    </script>
+  </head>
+  <body>
+      <div class="unit position-body">
+          <div id="main_body"> 
+              <!-- --> 
+              <br/> 
+              <!-- -->
+          </div>
+      </div>
+      <div class="unit position-header">
+          <div id="menus">
+              <button id="source_btn">By Sources</button>
+              <button id="topic_btn">By Topics</button>
+          </div>
+          <div id="header"></div>
+      </div>
+      <div class="unit columns position-footer">
+          <div class="column">1</div>
+          <div class="column">2</div>
+          <div class="column"><div id="loadingDialog"></div></div>
+      </div>
+      <div class="unit position-sidebar">
+          <div id="right_menu" style="height:400px">THIS IS ON THE SIDE</div>
+      </div>
+      <div class="unit horizontal-center" style="width:97%;">
+          <div class="display header"></div>
+          <div class="columns layout">
+              <div class="column elastic display body"></div>
+              <div class="column fixed display sidebar" style="width:300px;"></div>
+          </div>
+          <div class="display footer"></div>
+      </div>
+  </body>
+</html>

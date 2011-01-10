@@ -1,0 +1,18 @@
+[{
+    text: 'Menu', 
+    cls: 'feeds-node',
+    expanded:true,
+    children: [{
+        text: 'By sources',
+        id : 'source',
+        leaf: true
+    },{
+        text: 'By topics',
+        id : 'topic',
+        leaf: true
+    },{
+        text: 'Google Map',
+        id : 'gmap',
+        leaf: true
+    }]
+}]
