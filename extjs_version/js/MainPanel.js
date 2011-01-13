@@ -175,6 +175,7 @@ var individual = [{
 var wbTopicIndicatorPanel = {
     id : 'wb-center-topic-indicator-main-panel',
     region:'center',
+    width: .7,
     layout:'border',
     items: [ {
         xtype : 'wbindicatorformpanel',
@@ -254,11 +255,15 @@ var wbTopicIndicatorPanel = {
 
 var countriesSourceTreePanel = {
     xtype: 'wbcountrytreepanel',
+    region:'east',
+    width: 250,
     id: 'wb-center-source-tree-panel'
 };
 
 var countriesTopicTreePanel= {
     xtype: 'wbcountrytreepanel',
+    region:'east',
+    width: 250,
     id: 'wb-center-topic-tree-panel'
 };
 

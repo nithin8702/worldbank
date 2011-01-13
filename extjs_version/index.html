@@ -4,14 +4,14 @@
         <title id='title'>HTML Page setup Tutorial</title>
  
         <!-- ** CSS ** -->
-        <link rel="stylesheet" type="text/css" href="/worldbank/lib/ext-3.3.1/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="../lib/ext-3.3.1/resources/css/ext-all.css" />
 
         <script type="text/javascript" src="http://www.google.com/jsapi"></script> 
         <!-- this is for the local host -->
         <script src="http://maps.google.com/maps?file=api&v=3.x&key=ABQIAAAA2CKu_qQN-JHtlfQ5L7BLlRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQl3I3p2yrGARYK4f4bkjp9NHpm5w" type="text/javascript"></script>
 
         <!-- base library -->
-        <script type="text/javascript" src="/worldbank/lib/ext-3.3.1/adapter/ext/ext-base.js"></script>
+        <script type="text/javascript" src="../lib/ext-3.3.1/adapter/ext/ext-base.js"></script>
 
         <!-- overrides to base library -->
  
@@ -19,49 +19,47 @@
         <!-- ExtJS library: base/adapter -->
 
         <!-- ExtJS library: all widgets -->
-        <script type="text/javascript" src="/worldbank/lib/ext-3.3.1/ext-all-debug.js"></script>
+        <script type="text/javascript" src="../lib/ext-3.3.1/ext-all-debug.js"></script>
 
-        <script type="text/javascript" src="/worldbank/extjs_version/js/Variables.js"></script>
+        <script type="text/javascript" src="./js/Variables.js"></script>
 
-        <!--
-        <script type="text/javascript" src="/worldbank/js/extjs/languages.js"></script>
-        <script type="text/javascript" src="/worldbank/js/extjs/multi-lang.js"></script>
-        -->
+        <script type="text/javascript" src="./js/languages.js"></script>
+        <script type="text/javascript" src="./js/multi-lang.js"></script>
  
         <!-- overrides to library -->
-        <script type="text/javascript" src="/worldbank/lib/ext-3.3.1/examples/ux/GMapPanel.js"></script>
+        <script type="text/javascript" src="../lib/ext-3.3.1/examples/ux/GMapPanel.js"></script>
  
         <!-- extensions -->
-        <script type="text/javascript" src="./js/ux/jsonp.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/ux/WorldBank.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/ux/WorldBankComponent.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/ux/GVisualizationPanel.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/ux/RemoteComponent.js"></script>
+        <script type="text/javascript" src="./js/Plugins.js"></script>
+        <script type="text/javascript" src="./js/ux/WorldBank.js"></script>
+        <script type="text/javascript" src="./js/ux/WorldBankComponent.js"></script>
+        <script type="text/javascript" src="./js/ux/GVisualizationPanel.js"></script>
+        <script type="text/javascript" src="./js/ux/RemoteComponent.js"></script>
  
         <!-- page specific -->
-        <script type="text/javascript" src="/worldbank/extjs_version/js/TopPanel.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/MenuPanel.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/PropertyPanel.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/BottomPanel.js"></script>
-        <script type="text/javascript" src="/worldbank/extjs_version/js/MainPanel.js"></script>
+        <script type="text/javascript" src="./js/TopPanel.js"></script>
+        <script type="text/javascript" src="./js/MenuPanel.js"></script>
+        <script type="text/javascript" src="./js/PropertyPanel.js"></script>
+        <script type="text/javascript" src="./js/BottomPanel.js"></script>
+        <script type="text/javascript" src="./js/MainPanel.js"></script>
 
         <script type="text/javascript">
         // Path to the blank image should point to a valid location on your server
-        Ext.BLANK_IMAGE_URL = '/worldbank/lib/ext-3.3.1/resources/images/default/s.gif';
+        Ext.BLANK_IMAGE_URL = '../lib/ext-3.3.1/resources/images/default/s.gif';
  
         Ext.onReady( function() {
 
+        	MultiLang.init();
             // Ext.Loader.load(['./js/components/Gtimeline.js'], function(){}, this, true);
             var viewport = new Ext.Viewport({
                 layout: 'border',
                 items: [ topPanel, leftMenuPanel, mainContentPanel, rightPropertyPanel, bottomPanel],
                 onRender: function() {
-                    console.log( " rendering ......... ");
+                    // console.log( " rendering ......... ");
                     // parent 코드 후
                 }
             });
-
-            console.log( Ext.get('center2').dom.innerHTML );
+            /*
             // get a reference to the HTML element with id "hideit" and add a click listener to it 
             Ext.get("hideit").on('click', function(){
                 // get a reference to the Panel that was created with id = 'west-panel' 
@@ -69,8 +67,7 @@
                 // expand or collapse that Panel based on its collapsed property state
                 w.collapsed ? w.expand() : w.collapse();
             });
-
-           console.info('woohoo!!!');
+            */
  
         }); //end onReady
         </script>
@@ -79,29 +76,8 @@
     <body>
 
     <div id="header">
-        <div id="languages"></div>
+        <div style="float:right;" id="languages"></div>
         <!-- <div style="float:right;margin:5px;" class="x-small-editor"><input type="text" id="search" /></div> -->
-    </div>
-
-    <!-- use class="x-hide-display" to prevent a brief flicker of the content -->
-    <div id="west" class="x-hide-display">
-        <p>Hi. I'm the west panel.</p>
-    </div>
-
-    <div id="center2" class="x-hide-display">
-        <a id="hideit" href="#">Toggle the west region</a>
-        <p>The center panel automatically grows to fit the remaining space in the container that isn't taken up by the border regions.</p>
-        <hr>
-    </div>
-    <div id="center1" class="x-hide-display">
-        <p><b>Done reading me? Close me by clicking the X in the top right corner.</b></p>
-    </div>
-
-    <div id="props-panel" class="x-hide-display" style="width:200px;height:200px;overflow:hidden;">
-    </div>
-
-    <div id="south" class="x-hide-display">
-        <p>south - generally for informational stuff, also could be for status bar</p>
     </div>
 
     <div id="footer">

@@ -4,8 +4,6 @@ Ext.namespace('Ext.ux.component');
 
 Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     title: 'Country List',
-    region:'east',
-    width: 300,
     useArrows:true,
     autoScroll:true,
     animate:true,
