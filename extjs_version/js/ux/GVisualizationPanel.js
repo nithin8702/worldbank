@@ -37,7 +37,7 @@ Ext.ux.wbGDataTableAdapter = function(config) {
 
     		tbl.addColumn('date', "Date", 'date');
             Ext.iterate(config.columns, function(key, val){
-            		tbl.addColumn('number', val, key);
+            	tbl.addColumn('number', val, key);
             });
 
         	tbl.addRows(store.data.length);
