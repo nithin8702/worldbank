@@ -23,8 +23,9 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
            console.log("fire before load event");
        },
        'checkchange': function(node, checked){
-    	   var wbEastCountryProperty = Ext.getCmp('wb-east-country-property-grid');
-    	   console.log(node)
+           var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
+           var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
+    	   var wbEastCountryProperty = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid');
            if(checked){
                node.getUI().addClass('complete');
                wbEastCountryProperty.setProperty(node.id, node.text, true);
@@ -41,17 +42,18 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
             var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
             var tabPanel = Ext.getCmp('wb-center-' + selectedNode.id + '-content-panel');
             if (tabPanel.items.getCount() < 3) {
-                 Ext.each(gCharts, function(val, key) {
-                     tabPanel.add({
-                                 title: val.trim(),
-                                 iconCls: 'tabs',
-                                 plugins: new Ext.ux.Plugin.RemoteComponent({
-                                      url : './js/components/Gtimeline.js',
-                                      loadOn: 'show'
-                                 }),
-                                 autoShow: true
-                                 // closable:true
+            	tabPanel.maskDisabled = false;
+                Ext.iterate(gCharts, function(key, val) {
+                    tabPanel.add({
+                        title: val,
+                        plugins: [new Ext.ux.Plugin.RemoteComponent({
+			                        url : "./js/components/Gtimeline.js",
+			                        loadOn: 'show'})],
+                        autoShow: true
                     });
+                    tabPanel.maskDisabled = true;
+                } );
+
 /*
                      new Ext.data.Connection({
                          url: 'js/extjs/components/Gtimeline.js',
@@ -74,7 +76,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
                          } 
                      });
 */
-                });
+
             }
 
             var msg = '', selNodes = Ext.getCmp('wb-center-' + selectedNode.id + '-tree-panel').getChecked();

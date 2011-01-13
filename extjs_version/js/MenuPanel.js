@@ -21,18 +21,19 @@ var leftTreeMenuPanel = {
         'render': function(tp){
             // Ext.getCmp('wb-center-content-panel').layout.setActiveItem('wb-center-source-content-panel');
             tp.getSelectionModel().on('selectionchange', function(tree, node){
-                var el = Ext.getCmp('details-panel').body;
+                var el = Ext.getCmp('wb-west-detail-panel').body;
                 if(node && node.leaf){
                      if (node.id == 'gmap') {
-                    	 Ext.getCmp('wb-east-property-grid').collapse(); // close east property panel
-                    	 Ext.getCmp('wb-west-tree-menu-panel').collapse(); // close west menu panel
-                    	 Ext.getCmp('wb-center-' + node.id + '-content-panel').addMarker();
-                    	 Ext.getCmp('wb-center-' + node.id + '-content-panel').addMarkers();
+                    	 Ext.getCmp('wb-east-property-panel').collapse(); // close east property panel
+                    	 Ext.getCmp('wb-west-menu-panel').collapse(); // close west menu panel
+                    	 // Ext.getCmp('wb-center-' + node.id + '-content-panel').addMarker();
                     	 markers = [{lat: 42.339641,'long': -71.094224,marker: {title: 'Boston Museum of Fine Arts'}},
                     	            {lat: 42.339419,'long': -71.09077,marker: {title: 'Northeastern University'}}
                     	 ];
+                    	 // Ext.getCmp('wb-center-' + node.id + '-content-panel').addMarkers(markers);
                      }
                      Ext.getCmp('wb-center-content-panel').layout.setActiveItem('wb-center-' + node.id + '-content-panel');
+                     Ext.getCmp('wb-east-property-grid-tabpanel').activate('wb-east-' + node.id + '-country-property-grid');
                 } else {
                     // el.update(detailsText);
                 }
@@ -44,7 +45,7 @@ var leftTreeMenuPanel = {
 var leftMenuDetailPanel = {
     region: 'south',
     title: 'Menu Brief Description',
-    id: 'details-panel',
+    id: 'wb-west-detail-panel',
     autoScroll: true,
     collapsible: true,
     split: true,
@@ -57,7 +58,7 @@ var leftMenuDetailPanel = {
 var leftMenuPanel = {
     layout: 'border',
     title: 'West Side (Left Menu Panel)',
-    id: 'layout-browser',
+    id: 'wb-west-menu-panel',
     region:'west',
     collapsible: true,
     split : true,

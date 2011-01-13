@@ -139,37 +139,3 @@ Ext.ux.tree.wbTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
         }
     }
 });
-
-Ext.ux.util.clone = function(obj){
-   var seenObjects = [];
-   var mappingArray = [];
-   var  f = function(simpleObject) {
-          var indexOf = seenObjects.indexOf(simpleObject);
-          if (indexOf == -1) {
-                 switch (Ext.type(simpleObject)) {
-                        case 'object':
-                           seenObjects.push(simpleObject);
-                           var newObject = {};
-                           mappingArray.push(newObject);
-                           for (var p in simpleObject)
-                                  newObject[p] = f(simpleObject[p]);
-                           newObject.constructor = simpleObject.constructor;
-                        return newObject;
- 
-                        case 'array':
-                           seenObjects.push(simpleObject);
-                           var newArray = [];
-                           mappingArray.push(newArray);
-                           for(var i=0,len=simpleObject.length; i<len; i++)
-                                  newArray.push(f(simpleObject[i]));
-                        return newArray;
- 
-                        default:
-                        return simpleObject;
-                 }
-          } else {
-                 return mappingArray[indexOf];
-          }
-   };
-   return f(obj);
-}
