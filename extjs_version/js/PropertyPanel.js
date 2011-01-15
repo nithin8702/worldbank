@@ -18,20 +18,16 @@ var rightPropertyPanel = {
         tabPosition: 'bottom',
         items: [new Ext.grid.PropertyGrid({
         	id: 'wb-east-source-country-property-grid',
-            title: 'Source Country',
-            source: {}
+            title: 'Source Country'
         }), new Ext.grid.PropertyGrid({
         	id: 'wb-east-topic-country-property-grid',
-            title: 'Topic Country',
-            source: {}
+            title: 'Topic Country'
         }), new Ext.grid.PropertyGrid({
             title: 'Indicator',
-            id: 'wb-east-indicator-property-grid',
-            source: {}
+            id: 'wb-east-indicator-property-grid'
         }), new Ext.grid.PropertyGrid({
         	id: 'wb-east-parameter-property-grid',
-            title: 'Parameter',
-            source: {}
+            title: 'Parameter'
         })]
     })
 };

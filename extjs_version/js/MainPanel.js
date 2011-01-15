@@ -256,14 +256,14 @@ var wbTopicIndicatorPanel = {
 var countriesSourceTreePanel = {
     xtype: 'wbcountrytreepanel',
     region:'east',
-    width: 250,
+    width: 300,
     id: 'wb-center-source-tree-panel'
 };
 
 var countriesTopicTreePanel= {
     xtype: 'wbcountrytreepanel',
     region:'east',
-    width: 250,
+    width: 300,
     id: 'wb-center-topic-tree-panel'
 };
 
@@ -336,7 +336,7 @@ var mainContentPanel = {
          iconCls: 'tabs',
          autoScroll:true,
          margins: '10 10 10 10',
-         autoLoad: {url: 'abc.html', scripts: true}
+         autoLoad: {url: './templates/introduction.htm', scripts: true}
     }, topicMainPanel, sourceMainPanel,
     {
         title: 'google map',

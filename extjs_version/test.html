@@ -37,7 +37,6 @@
                 console.log(this);
             });
         }
-
         
         Ext.ux.JSONP.request(worldbank_api_url + '/countries/CUB;CRI/indicators/SP.POP.TOTL?format=json', {
             callbackKey: 'Getdata',
@@ -49,8 +48,10 @@
             },
             callback: updateResults
         });
+
         new Ext.data.Store ( {
-    		url: '/lib/ajax-proxy.php?route=/countries/CUB;CRI/indicators/SP.POP.TOTL?format=json',
+            url: './json/SP.POP.TOTL',
+    		// url: '/lib/ajax-proxy.php?route=/countries/CUB;CRI/indicators/SP.POP.TOTL?format=json',
             autoLoad: true,
     	    reader: new Ext.ux.data.wbReader({
     	        root: 'results',
@@ -64,6 +65,38 @@
 	            }   
 	        } 
     	});
+
+        var panel = new Ext.Panel({
+            id:'main-panel',
+            baseCls:'x-plain',
+            renderTo: Ext.getBody(),
+            layout:'table',
+            layoutConfig: {columns:3},
+            // applied to child components
+            defaults: {bodyStyle:'padding:20px'},
+            items:[{
+                title:'Item 1'
+            },{
+                title:'Item 2'
+            },{
+                title:'Item 3'
+            },{
+                title:'Item 4',
+                // width:410,
+                colspan:2
+            },{
+                title:'Item 5'
+            },{
+                title:'Item 6'
+            },{
+                title:'Item 7',
+                // width:410,
+                colspan:2
+            },{
+                title:'Item 8'
+            }]
+        });
+
         </script>
  
     </head>
