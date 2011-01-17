@@ -9,17 +9,18 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     animate:true,
     enableDD:true,
     containerScroll: true,
-    rootVisible: true,
-    root:{ expanded: true,
-           text: "",
-           draggable: false,
-           async: true},
     loader: new Ext.ux.tree.wbTreeLoader({dataUrl: './json/countries.json'}),
+    root: {
+        nodeType: 'async',
+        text: 'Ext JS',
+        draggable: false,
+        id: 'source',
+        expanded: true
+    },
+    rootVisible: false,
+    preloadChildren : true,
     frame: true,
     listeners: {
-       'load' : function ( node ) {
-           console.log("fire before load event");
-       },
        'checkchange': function(node, checked){
            var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
            var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
@@ -34,12 +35,21 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
        }
    },
    buttons: [{
-        text: 'Get Completed Tasks',
+        text: 'show graph',
         handler: function(){
             var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
             var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
+
+            var wbEastCountryProperty = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid');
+            Ext.iterate(wbEastCountryProperty.getSource(), function(key, val) {
+            	console.log(key);
+            	console.log(val);
+            });
+            var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
+            console.log(wbEastIndicatorProperty.getSource()[selectedNode.id + '-indicator']);
+            
             var tabPanel = Ext.getCmp('wb-center-' + selectedNode.id + '-content-panel');
-            if (tabPanel.items.getCount() < 3) {
+            if (tabPanel.items.getCount() < 2) {
             	tabPanel.maskDisabled = false;
                 Ext.iterate(gCharts, function(key, val) {
                     tabPanel.add({
@@ -97,7 +107,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 
 Ext.ux.component.wbIndicatorFormPanel = Ext.extend(Ext.form.FormPanel, {
     region:'north',
-    height: 270,
+    height: 120,
     border: false,
     labelWidth: 125,
     frame: true,
@@ -108,7 +118,6 @@ Ext.ux.component.wbIndicatorFormPanel = Ext.extend(Ext.form.FormPanel, {
         labelSeparator: ''
     },
     defaults: {
-        width: 230,
         msgTarget: 'side'
     },
     // defaultType: 'datefield',

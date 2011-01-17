@@ -29,158 +29,176 @@ Ext.apply(Ext.form.VTypes, {
 
 var wbSourceIndicatorPanel = {
     id : 'wb-center-source-indicator-main-panel',
-    region:'center',
-    layout:'border',
+    flex: 2,
+    layout:'anchor',
     items: [ {
         xtype : 'wbindicatorformpanel',
         id : 'wb-center-source-indicator-form-panel',
-        region: 'north',
         labelWidth: 60,
         title: 'Source Indicator Selection',
-        items : [ { xtype : 'wbcombobox',
-               id : 'wb-center-source-combo',
-               fieldLabel : 'Source : ',
-               name:  'source',
-               store : new Ext.ux.component.wbDataStore ( {url: './json/sources.json'}),
-               listeners : {
-                   change : function( field, newValue, oldValue ) {
-                      var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
-                      var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
-                      var wbIndicatorCombo = Ext.getCmp('wb-center-' + selectedNode.id + '-indicator-combo');
-                      // in case of source, file name is indicators pl
-                      var indicator_url = './json/' + selectedNode.id + '/' + newValue + '/indicators.json';
-                      wbIndicatorCombo.setDisabled(true);
-                      wbIndicatorCombo.setValue('');
-                      // wbIndicatorCombo.store.proxy.setUrl(indicator_url); 
-                      wbIndicatorCombo.store.removeAll();
-                      wbIndicatorCombo.store.proxy = new Ext.data.HttpProxy({url: indicator_url});
-                      wbIndicatorCombo.store.reload();
-                      wbIndicatorCombo.setDisabled(false);
-                      var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
-                      wbEastIndicatorProperty.setProperty('source', newValue, true);
-                   }   
-               }
-         },{ xtype : 'wbcombobox',
-             fieldLabel : 'Indicator : ',
-             name:   'source-indicator',
-             id : 'wb-center-source-indicator-combo',
-             width : 400,
-             listeners: {
-	             change : function( field, newValue, oldValue ) {
-		             var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
-		             wbEastIndicatorProperty.setProperty('source-indicator', newValue, true);
-		        } 
-             }
-         } ]
-    }, {
-      xtype: 'wbindicatorformpanel',
-      region:'center',
-      items: [ {
-          layout: 'column',
-          border: false,
-          width: 460,
-          // defaults are applied to all child items unless otherwise specified by child item
-          defaults: {
-              columnWidth: '.5',
-              border: false
-          },
-          items: [ {
-              xtype : "datefield",
-              fieldLabel: 'Start Date',
-              name: 'source-startdt',
-              id: 'wb-center-source-startdt',
-              style: {width: '100'},
-              vtype: 'daterange',
-              width: 100,
-              endDateField: 'wb-center-source-enddt' // id of the end date field
-          },{
-              xtype : "datefield",
-              fieldLabel: 'End Date',
-              name: 'source-startdt',
-              fieldLabel: 'Start Date',
-              name: 'source-enddt',
-              id: 'wb-center-source-enddt',
-              style: {width: '100'},
-              vtype: 'daterange',
-              width: 100,
-              startDateField: 'wb-center-source-startdt' // id of the start date field
-          } ]
-      } ]
-   } ]
+        anchor:'100% 25%',
+        items : [ { 
+        	xtype : 'wbcombobox',
+            id : 'wb-center-source-combo',
+            fieldLabel : 'Source : ',
+            name:  'source',
+            store : new Ext.ux.component.wbDataStore ( {url: './json/sources.json'}),
+            listeners : {
+                 change : function( field, newValue, oldValue ) {
+                     var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
+                     var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
+                     var wbIndicatorCombo = Ext.getCmp('wb-center-' + selectedNode.id + '-indicator-combo');
+                     // in case of source, file name is indicators pl
+                     var indicator_url = './json/' + selectedNode.id + '/' + newValue + '/indicators.json';
+                     wbIndicatorCombo.setDisabled(true);
+                     wbIndicatorCombo.setValue('');
+                     // wbIndicatorCombo.store.proxy.setUrl(indicator_url); 
+                     wbIndicatorCombo.store.removeAll();
+                     wbIndicatorCombo.store.proxy = new Ext.data.HttpProxy({url: indicator_url});
+                     wbIndicatorCombo.store.reload();
+                     wbIndicatorCombo.setDisabled(false);
+                      
+                     Ext.getCmp('wb-east-property-grid-tabpanel').activate('wb-east-indicator-property-grid');
+                     var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
+                     wbEastIndicatorProperty.setProperty('source', newValue, true);
+                 }   
+            }
+	        },{ xtype : 'wbcombobox',
+	            fieldLabel : 'Indicator : ',
+	            name:   'source-indicator',
+	            id : 'wb-center-source-indicator-combo',
+	            listeners: {
+		            change : function( field, newValue, oldValue ) {
+			            var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
+			            wbEastIndicatorProperty.setProperty('source-indicator', newValue, true);
+			        } 
+	            }
+	         } ]
+	}, {
+		xtype: 'wbindicatorformpanel',
+        labelWidth: 86,
+        title: 'Parameter selection',
+        anchor:'100% 75%',
+		items: [ {
+			xtype: 'compositefield',
+	        fieldLabel: 'Date Range : ',
+	        msgTarget : 'side',
+	        items: [ {
+					xtype : "datefield",
+					name: 'source-startdt',
+					id: 'wb-center-source-startdt',
+					vtype: 'daterange',
+					value: '2001-01-01',
+					format: 'm/d/Y',
+					endDateField: 'wb-center-source-enddt' // id of the end date field
+				},{xtype: 'displayfield', value: ' ~ '},
+				{
+					xtype : "datefield",
+					name: 'source-enddt',
+					id: 'wb-center-source-enddt',
+					vtype: 'daterange',
+					value: '2010-01-01',
+					format: 'm/d/Y',
+					startDateField: 'wb-center-source-startdt' // id of the start date field
+			} ]
+		}, {
+	        xtype: 'sliderfield',
+	        id : 'wb-center-source-geomapdt',
+	        fieldLabel: 'Geomap Date : ',
+	        increment: 1,
+	        minValue: 1960,
+	        maxValue: 2010,
+            anchor: '100%',
+            value: 2000,
+            tipText: function(thumb) {
+                return String(thumb.value) + ' year';
+            }
+	    }, {
+        	id:             'wb-center-source-lendingTypes',
+        	xtype:          'combo',
+            width:          70,
+            mode:           'local',
+            value:          '',
+            triggerAction:  'all',
+            forceSelection: true,
+            editable:       false,
+            fieldLabel:     'Lending Types : ',
+            name:           'lendingTypes',
+            hiddenName:     'lendingTypes',
+            displayField:   'name',
+            valueField:     'value',
+            store:          new Ext.data.JsonStore({
+                fields : ['name', 'value'],
+                data   : [
+                    {name : 'IBRD',   value: 'IBD'},
+                    {name : 'Blend',  value: 'IDB'},
+                    {name : 'IDA',   value: 'IDX'},
+                    {name : 'Not classified',   value: 'NC'}
+                ]
+            })
+        }, {
+            xtype:'fieldset',
+            checkboxToggle:true,
+            title: 'MRV - fetches most recent values based on the number specified',
+            autoHeight:true,
+            defaults: {width: 210},
+            defaultType: 'combo',
+            collapsed: true,
+            items :[{
+            	id:             'wb-center-source-gapfill',
+                width:          50,
+                mode:           'local',
+                value:          'Y',
+                triggerAction:  'all',
+                forceSelection: true,
+                editable:       false,
+                fieldLabel:     'Gapfill',
+                name:           'gapfill',
+                hiddenName:     'gapfill',
+                displayField:   'name',
+                valueField:     'value',
+                store:          new Ext.data.JsonStore({
+                    fields : ['name', 'value'],
+                    data   : [
+                        {name : 'Yes',   value: 'Y'},
+                        {name : 'No',  value: 'N'}
+                    ]
+                })
+            }, {
+            	id:             'wb-center-source-frequency',
+                width:          80,
+                mode:           'local',
+                value:          'Y',
+                triggerAction:  'all',
+                forceSelection: true,
+                editable:       false,
+                fieldLabel:     'Frequency',
+                name:           'frequency',
+                hiddenName:     'frequency',
+                displayField:   'name',
+                valueField:     'value',
+                store:          new Ext.data.JsonStore({
+                    fields : ['name', 'value'],
+                    data   : [
+                        {name : 'yearly',   value: 'Y'},
+                        {name : 'monthly',  value: 'M'},
+                        {name : 'quarterly', value: 'Q'}
+                    ]
+                })
+            }
+            ]
+        } ]
+	  } ]
 };
-
-var individual = [{
-    bodyStyle: 'padding-right:5px;',
-    items: {
-        xtype: 'fieldset',
-        title: 'Individual Checkboxes',
-        autoHeight: true,
-        defaultType: 'checkbox', // each item will be a checkbox
-        items: [{
-            xtype: 'textfield',
-            name: 'txt-test1',
-            width: 50,
-            fieldLabel: 'Alignment Test'
-        }, {
-            fieldLabel: 'Favorite Animals',
-            boxLabel: 'Dog',
-            name: 'fav-animal-dog'
-        }, {
-            fieldLabel: '',
-            labelSeparator: '',
-            boxLabel: 'Cat',
-            name: 'fav-animal-cat'
-        }, {
-            checked: true,
-            fieldLabel: '',
-            labelSeparator: '',
-            boxLabel: 'Monkey',
-            name: 'fav-animal-monkey'
-        }]
-    }
-}, {
-    bodyStyle: 'padding-left:5px;',
-    items: {
-        xtype: 'fieldset',
-        title: 'Individual Radios',
-        autoHeight: true,
-        defaultType: 'radio', // each item will be a radio button
-        items: [{
-            xtype: 'textfield',
-            name: 'txt-test2',
-            width: 50,
-            fieldLabel: 'Alignment Test'
-        }, {
-            checked: true,
-            fieldLabel: 'Favorite Color',
-            boxLabel: 'Red',
-            name: 'fav-color',
-            inputValue: 'red'
-        }, {
-            fieldLabel: '',
-            labelSeparator: '',
-            boxLabel: 'Blue',
-            name: 'fav-color',
-            inputValue: 'blue'
-        }, {
-            fieldLabel: '',
-            labelSeparator: '',
-            boxLabel: 'Green',
-            name: 'fav-color',
-            inputValue: 'green'
-        }]
-    }
-}];
 
 var wbTopicIndicatorPanel = {
     id : 'wb-center-topic-indicator-main-panel',
-    region:'center',
-    width: .7,
-    layout:'border',
+    flex: 2,
+    layout:'anchor',
     items: [ {
         xtype : 'wbindicatorformpanel',
         id : 'wb-center-topic-indicator-form-panel',
-        region: 'north',
+        anchor:'100% 25%',
         labelWidth: 60,
         title: 'Topic Indicator selection',
         items : [ { xtype : 'wbcombobox',
@@ -210,6 +228,7 @@ var wbTopicIndicatorPanel = {
                       wbIndicatorCombo.store.reload();
                       wbIndicatorCombo.setDisabled(false);
                       // This is for the property setting.
+                      Ext.getCmp('wb-east-property-grid-tabpanel').activate('wb-east-indicator-property-grid');
                       var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
                       wbEastIndicatorProperty.setProperty('topic', newValue, true);
                    } 
@@ -219,7 +238,6 @@ var wbTopicIndicatorPanel = {
               fieldLabel : 'Indicator : ',
               id : 'wb-center-topic-indicator-combo',
               lazyRender : true,
-              width : 400,
               listeners: {
 		         change : function( field, newValue, oldValue ) {
 		             var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
@@ -228,43 +246,132 @@ var wbTopicIndicatorPanel = {
               }
          }  ]
     }, {
-      xtype: 'wbindicatorformpanel',
-      region:'center',
-      items: [ {
-          layout: 'column',
-          border: false,
-          width: 460,
-          // defaults are applied to all child items unless otherwise specified by child item
-          defaults: {
-              columnWidth: '.5',
-              border: false
-          },            
-          items: individual
-      },{
-          xtype : 'slider',
-          fieldLabel: 'Ambient Sounds',
-          value: 2000,
-          increment: 1,
-          minValue: 1976,
-          maxValue: 2009,
-          name: 'ambient',
-          tabTip : "sdlkf"
-      }]
-    }]
+		xtype: 'wbindicatorformpanel',
+        labelWidth: 86,
+        anchor:'100% 75%',
+        title: 'Parameter selection',
+		items: [ {
+			xtype: 'compositefield',
+	        fieldLabel: 'Date Range : ',
+	        msgTarget : 'side',
+	        items: [ {
+					xtype : "datefield",
+					name: 'source-startdt',
+					id: 'wb-center-topic-startdt',
+					vtype: 'daterange',
+					value: '2001-01-01',
+					format: 'm/d/Y',
+					endDateField: 'wb-center-source-enddt' // id of the end date field
+				},{xtype: 'displayfield', value: ' ~ '},
+				{
+					xtype : "datefield",
+					name: 'source-enddt',
+					id: 'wb-center-topic-enddt',
+					vtype: 'daterange',
+					value: '2010-01-01',
+					format: 'm/d/Y',
+					startDateField: 'wb-center-source-startdt' // id of the start date field
+			} ]
+		}, {
+	        xtype: 'sliderfield',
+	        id : 'wb-center-topic-geomapdt',
+	        fieldLabel: 'Geomap Date : ',
+	        increment: 1,
+	        minValue: 1960,
+	        maxValue: 2010,
+            anchor: '100%',
+            value: 2000,
+            tipText: function(thumb) {
+                return String(thumb.value) + ' year';
+            }
+	    }, {
+        	id:             'wb-center-topic-lendingTypes',
+        	xtype:          'combo',
+            width:          70,
+            mode:           'local',
+            value:          '',
+            triggerAction:  'all',
+            forceSelection: true,
+            editable:       false,
+            fieldLabel:     'Lending Types : ',
+            name:           'lendingTypes',
+            hiddenName:     'lendingTypes',
+            displayField:   'name',
+            valueField:     'value',
+            store:          new Ext.data.JsonStore({
+                fields : ['name', 'value'],
+                data   : [
+                    {name : 'IBRD',   value: 'IBD'},
+                    {name : 'Blend',  value: 'IDB'},
+                    {name : 'IDA',   value: 'IDX'},
+                    {name : 'Not classified',   value: 'NC'}
+                ]
+            })
+        }, {
+            xtype:'fieldset',
+            checkboxToggle:true,
+            title: 'MRV - fetches most recent values based on the number specified',
+            autoHeight:true,
+            defaults: {width: 210},
+            defaultType: 'combo',
+            collapsed: true,
+            items :[{
+            	id:             'wb-center-topic-gapfill',
+                width:          50,
+                mode:           'local',
+                value:          'Y',
+                triggerAction:  'all',
+                forceSelection: true,
+                editable:       false,
+                fieldLabel:     'Gapfill',
+                name:           'gapfill',
+                hiddenName:     'gapfill',
+                displayField:   'name',
+                valueField:     'value',
+                store:          new Ext.data.JsonStore({
+                    fields : ['name', 'value'],
+                    data   : [
+                        {name : 'Yes',   value: 'Y'},
+                        {name : 'No',  value: 'N'}
+                    ]
+                })
+            }, {
+            	id:             'wb-center-topic-frequency',
+                width:          80,
+                mode:           'local',
+                value:          'Y',
+                triggerAction:  'all',
+                forceSelection: true,
+                editable:       false,
+                fieldLabel:     'Frequency',
+                name:           'frequency',
+                hiddenName:     'frequency',
+                displayField:   'name',
+                valueField:     'value',
+                store:          new Ext.data.JsonStore({
+                    fields : ['name', 'value'],
+                    data   : [
+                        {name : 'yearly',   value: 'Y'},
+                        {name : 'monthly',  value: 'M'},
+                        {name : 'quarterly', value: 'Q'}
+                    ]
+                })
+            }
+            ]
+        } ]
+	  }]
 };
 
 var countriesSourceTreePanel = {
     xtype: 'wbcountrytreepanel',
-    region:'east',
-    width: 300,
-    id: 'wb-center-source-tree-panel'
+    id: 'wb-center-source-tree-panel',
+    flex: 1
 };
 
 var countriesTopicTreePanel= {
     xtype: 'wbcountrytreepanel',
-    region:'east',
-    width: 300,
-    id: 'wb-center-topic-tree-panel'
+    id: 'wb-center-topic-tree-panel',
+    flex: 1
 };
 
 /*
@@ -303,24 +410,34 @@ var countriesTopicTreePanel= {
 var sourceMainPanel = new Ext.TabPanel({ 
     id: 'wb-center-source-content-panel', 
     title: 'Source Content Panel', 
+    border: false,
     activeTab: 0, 
     items:[ {
         id:'wb-center-source-config-main-panel',
-        layout:'border',
-        title:'Loading...',
-        items:[countriesSourceTreePanel, wbSourceIndicatorPanel]
+        layout:'hbox',
+        layoutConfig: {
+            align : 'stretch',
+            pack  : 'start',
+        },
+        title:'Configuration',
+        items:[wbSourceIndicatorPanel, countriesSourceTreePanel]
     } ]
 });
 
 var topicMainPanel = new Ext.TabPanel({ 
     id: 'wb-center-topic-content-panel', 
     title: 'Topic Content Panel', 
+    border: false,
     activeTab: 0, 
     items: [{
         id:'wb-center-topic-config-main-panel',
-        layout:'border',
-        title:'Loading...',
-        items:[countriesTopicTreePanel, wbTopicIndicatorPanel]
+        layout:'hbox',
+        layoutConfig: {
+            align : 'stretch',
+            pack  : 'start',
+        },
+        title:'Configuration',
+        items:[wbTopicIndicatorPanel, countriesTopicTreePanel]
     }]
 });
 
@@ -330,24 +447,77 @@ var mainContentPanel = {
     layout: 'card',
     margins: '0 0 0 0',
     activeItem: 0,
-    border: false,
+    border: true,
     items: [ {
-         title: 'introduction',
-         iconCls: 'tabs',
-         autoScroll:true,
-         margins: '10 10 10 10',
-         autoLoad: {url: './templates/introduction.htm', scripts: true}
-    }, topicMainPanel, sourceMainPanel,
-    {
-        title: 'google map',
-        id: 'wb-center-gmap-content-panel',
-        iconCls: 'tabs',
-        autoScroll:false,
-        plugins: [new Ext.ux.Plugin.RemoteComponent({
-            url : './js/components/wbGmapPanel.js',
-            loadOn: 'show'
-        })]
-    }
+	         title: 'introduction',
+	         iconCls: 'tabs',
+	         autoScroll:true,
+	         margins: '10 10 10 10',
+	         autoLoad: {url: './templates/introduction.htm', scripts: true}
+	    }, topicMainPanel, sourceMainPanel,
+	    {
+	        title: 'google map',
+	        id: 'wb-center-gmap-content-panel',
+	        iconCls: 'tabs',
+	        autoScroll:false,
+	        plugins: [new Ext.ux.Plugin.RemoteComponent({
+	            url : './js/components/wbGmapPanel.js',
+	            loadOn: 'show'
+	        })]
+	    } ],
+    bbar: new Ext.ux.StatusBar({
+        id: 'main-panel-statusbar',
+        defaultText: 'Default status text',
+        //defaultIconCls: 'default-icon',
+        // values to set initially:
+        text: 'Ready',
+        iconCls: 'x-status-valid',
+        items: [
+            {
+                text: 'Show Warning & Clear',
+                handler: function (){
+                    var sb = Ext.getCmp('main-panel-statusbar');
+                    sb.setStatus({
+                        text: 'Oops!',
+                        iconCls: 'x-status-error',
+                        clear: true // auto-clear after a set interval
+                    });
+                }
+            },
+            {
+                text: 'Show Busy',
+                handler: function (){
+                    var sb = Ext.getCmp('main-panel-statusbar');
+                    // Set the status bar to show that something is processing:
+                    sb.showBusy();
+                }
+            },
+            {
+                text: 'Clear status',
+                handler: function (){
+                    var sb = Ext.getCmp('main-panel-statusbar');
+                    // once completed
+                    sb.clearStatus(); 
+                }
+            },
+            '-',
+            {xtype: 'tbtext', id: 'main-panel-clock-status-bar', text: ' '},            	
+            ' '
+        ]
+    }),
+    listeners: {
+	    render: {
+	        fn: function(){
+	            // Kick off the clock timer that updates the clock el every second:
+			    Ext.TaskMgr.start({
+			        run: function(){
+			            Ext.fly(Ext.getCmp('main-panel-clock-status-bar').getEl()).update(new Date().format('g:i:s A'));
+			        },
+			        interval: 1000
+			    });
+	        },
+	        delay: 100
+	    }
+	}
 
-]
 };

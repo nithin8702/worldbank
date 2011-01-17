@@ -116,32 +116,47 @@ Ext.extend(Ext.ux.data.wbReader, Ext.data.JsonReader, {
 });
 
 Ext.ux.tree.wbTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
-	load : function( node, callback, scope ) {
-	    console.log(node);
-	},
 	// private override
     processResponse : function(response, node, callback, scope){ 
         var json = response.responseText;
         try {
             var o = response.responseData || Ext.decode(json);
-            // node = new Ext.tree.AsyncTreeNode({ text: "country", cls: "folder"});
-            o = o[1];
-            node.beginUpdate();
-            node.removeAll();
-            var countries = node.appendChild( this.createNode( { text: "Countries", cls: "folder", expanded: true} ) );
-            var incomeLevel = node.appendChild( this.createNode( { text: "Income Level", cls: "folder", expanded: true} ) );
-            var region = node.appendChild( this.createNode( { text: "Region", cls: "folder", expanded: true} ) );
-            for(var i = 0, len = o.length; i < len; i++) {
-                var treeNode = {id : o[i]['id'], text : o[i]['name'], leaf : true, checked : false};
-                var n = this.createNode(treeNode);
-                if(n){
-                    countries.appendChild(n);
-                }
-            }
-            node.endUpdate();
+            
+            node = this.parseWbCountryData(node, o[1]);
+            // node.expandChildNodes();
+
             this.runCallback(callback, scope || node, [node]);
         } catch(e) {
             this.handleFailure(response);
         }
+    },
+	parseWbCountryData : function(node, o) {
+        var regionCode = new Array("EAP", "EAS", "ECA", "ECS", "LAC", "LCN", "MNA", "MEA", "NAC", "SAS", "SSA",  "SSF");
+        var incomeLevel = new Array("NOC", "OEC", "HIC", "HPC", "LIC", "LMC", "LMY", "MIC", "UMC");
+
+		var countryChildren = new Array();
+		var regionChildren = new Array();
+		var inclvlChildren = new Array();
+        for(var i = 0, len = o.length; i < len; i++) {
+            switch (true) {
+	            case ( regionCode.indexOf( o[i]['id'] )  > -1 ):
+	            	regionChildren.push({id : o[i]['id'], text : o[i]['name'], leaf : true, checked : false});
+	                break;
+	            case ( incomeLevel.indexOf( o[i]['id'] ) > -1 ):
+	            	inclvlChildren.push({id : o[i]['id'], text : o[i]['name'], leaf : true, checked : false});
+	                break;
+	            default:
+	            	countryChildren.push({id : o[i]['iso2Code'], text : o[i]['name'], leaf : true, checked : false});
+	                break;
+            }
+
+        }
+
+        node.beginUpdate();
+        node.appendChild(this.createNode({ id : "country", text: "country", cls: "folder", leaf : false, children: countryChildren} ) );
+        node.appendChild(this.createNode({ id : "region", text: "region", cls: "folder", leaf : false, children: regionChildren} ) );
+        node.appendChild(this.createNode({ id : "inclvl", text: "income level", cls: "folder", leaf : false, children: inclvlChildren} ) );
+        node.endUpdate();
+        return node;
     }
 });
