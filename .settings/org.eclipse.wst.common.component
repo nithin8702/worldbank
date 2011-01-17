@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="wbApiMashup">
+    <wb-module deploy-name="worldbank">
         <wb-resource deploy-path="/" source-path="/WebContent"/>
-        <property name="context-root" value="wbApiMashup"/>
+        <property name="context-root" value="worldbank"/>
     </wb-module>
 </project-modules>
