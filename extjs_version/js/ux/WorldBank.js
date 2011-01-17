@@ -116,20 +116,26 @@ Ext.extend(Ext.ux.data.wbReader, Ext.data.JsonReader, {
 });
 
 Ext.ux.tree.wbTreeLoader = Ext.extend(Ext.tree.TreeLoader, {
-    // private override
+	load : function( node, callback, scope ) {
+	    console.log(node);
+	},
+	// private override
     processResponse : function(response, node, callback, scope){ 
         var json = response.responseText;
         try {
             var o = response.responseData || Ext.decode(json);
             // node = new Ext.tree.AsyncTreeNode({ text: "country", cls: "folder"});
-            node.beginUpdate();
             o = o[1];
-            node.appendChild( this.createNode( { text: "country", cls: "folder"} ) );
-            for(var i = 0, len = o.length; i < len; i++){
-                var treeNode = {id : o[i]['id'],text : o[i]['name'],leaf : true,checked: false};
+            node.beginUpdate();
+            node.removeAll();
+            var countries = node.appendChild( this.createNode( { text: "Countries", cls: "folder", expanded: true} ) );
+            var incomeLevel = node.appendChild( this.createNode( { text: "Income Level", cls: "folder", expanded: true} ) );
+            var region = node.appendChild( this.createNode( { text: "Region", cls: "folder", expanded: true} ) );
+            for(var i = 0, len = o.length; i < len; i++) {
+                var treeNode = {id : o[i]['id'], text : o[i]['name'], leaf : true, checked : false};
                 var n = this.createNode(treeNode);
                 if(n){
-                    node.appendChild(n);
+                    countries.appendChild(n);
                 }
             }
             node.endUpdate();
