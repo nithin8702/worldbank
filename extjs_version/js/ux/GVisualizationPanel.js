@@ -32,34 +32,38 @@ Ext.ux.wbGDataTableAdapter = function(config) {
 
     return {
         adapt: function(config) {
-            var store = Ext.StoreMgr.lookup(config.store || config.ds);
+    		var store = Ext.StoreMgr.lookup(config.store || config.ds);
             var tbl = new google.visualization.DataTable();
 
     		tbl.addColumn('date', "Date", 'date');
             Ext.iterate(config.columns, function(key, val){
-            	tbl.addColumn('number', val, key);
+            	tbl.addColumn('number', key, val);
             });
 
-        	tbl.addRows(store.data.length);
+            console.log("length : " + store.data.length);
+            console.log(store);
+            console.log(store.data);
+
+            tbl.addRows(config.store.data.length);
             var colIdx = 0;
             Ext.iterate(config.columns, function(key, val){
-	            fld = store.fields.itemAt(colIdx);
+	            fld = config.store.fields.itemAt(colIdx);
 	            console.log(fld);
-            	store.data.each(function(record, rowIdx) {
+            	config.store.data.each(function(record, rowIdx) {
             		console.log(record.get('country').value + " = " + val)
             		if (record.get('country').value == val) {
             			console.log("is set? ");
             			console.log(record);
-	            		if (colIdx == 0) {
+	            		if (colIdx < 1) {
 	            			tbl.setValue(rowIdx, colIdx, new Date('01/01/' + record.get('date') ));
 	            			tbl.setValue(rowIdx, colIdx+1, parseFloat(record.get('value')));
+	            		} else {
+	            			tbl.setValue(rowIdx, colIdx+1, parseFloat(record.get('value')));
 	            		}
-		            	tbl.setValue(rowIdx, colIdx+1, parseFloat(record.get('value')));
             		}
 	            });
             	colIdx++;
             });
-            console.log(tbl);
             return tbl;
         }
     };
@@ -155,6 +159,7 @@ Ext.ux.GVisualizationPanel = Ext.extend(Ext.Panel, {
                 break;
             }
         }
+        console.log(this);
         google.load(
             this.visualizationAPI,
             this.visualizationAPIVer,

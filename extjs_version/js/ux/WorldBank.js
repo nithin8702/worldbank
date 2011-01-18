@@ -78,6 +78,19 @@ var oScripts = [
 ];
 */
 
+Ext.ux.util.getWBRequestURL = function(nodeID) {
+
+    var countryList = new Array();
+    var wbEastCountryProperty = Ext.getCmp('wb-east-' + nodeID + '-country-property-grid');
+    Ext.iterate(wbEastCountryProperty.getSource(), function(key, val) {
+    	countryList.push(val);
+    });
+    var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
+    var indicator = wbEastIndicatorProperty.getSource()[nodeID + '-indicator'];
+    
+	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json";
+}
+
 Ext.ux.data.wbReader = function(meta, recordType){
   meta = meta || {};
   Ext.ux.data.wbReader.superclass.constructor.call(this, meta, recordType || meta.fields);
