@@ -1,4 +1,14 @@
-.header			{ background: #012d52; color: #FFF;}
+
+#header {
+    background: #7F99BE url(../../lib/ext-3.3.1/examples/layout-browser/images/layout-browser-hd-bg.gif) repeat-x center;
+}
+#header h1 {
+    font-size: 16px;
+    float: left;
+    // color: #fff;
+    font-weight: bold;
+    padding: 5px 10px;
+}
 
 .content		{ background: #EEE; }
 
@@ -7,3 +17,61 @@
 .footer			{ background: #012d52; color: #FFF; }
 
 .container 		{ padding:5px; margin:2px; border:solid 1px #666; }
+
+#wb-west-detail-panel h2 {
+    padding:10px 10px 0;
+    font-size:12px;
+    color:#15428B;
+}
+#wb-west-detail-panel p {
+    padding:10px 10px 0;
+}
+#wb-west-detail-panel pre {
+    border-top:1px dotted #ddd;
+    border-bottom:1px dotted #ddd;
+    margin-top:10px;
+    padding:0 5px;
+    background:#f5f5f5;
+}
+#wb-west-detail-panel .details-info {
+    margin:15px;
+    padding:15px;
+    border:1px dotted #999;
+    color:#555;
+    background: #f9f9f9;
+}
+
+#loading-mask{
+    background-color:white;
+    height:100%;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    z-index:20000;
+}
+#loading{
+    height:auto;
+    position:absolute;
+    left:45%;
+    top:40%;
+    padding:2px;
+    z-index:20001;
+}
+#loading a {
+    color:#225588;
+}
+#loading .loading-indicator{
+    background:white;
+    color:#444;
+    font:bold 13px Helvetica, Arial, sans-serif;
+    height:auto;
+    margin:0;
+    padding:10px;
+}
+#loading-msg {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+

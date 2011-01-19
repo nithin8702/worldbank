@@ -57,16 +57,15 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
                     tabPanel.add({
                         title: val,
                         plugins: [ new Ext.ux.Plugin.RemoteComponent( {
-			                        	url : "./js/components/Gtimeline.js",
+			                        	url : "./js/components/G" + key + ".js",
 			                        	loadOn: 'show',
 			                            listeners: {
 				                            'success' : {fn: function(){
 
 				                            }},
 				                            'beforeadd' : {fn: function(JSON){
-				                            	console.log("before add json")
-				                            	console.log(JSON);
 				                            	JSON['store'] = dataStore;
+				                            	JSON['columns'] = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
 				                            }}
 				                    	} 
                         		} ) ]

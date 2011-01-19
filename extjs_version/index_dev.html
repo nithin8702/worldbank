@@ -6,6 +6,7 @@
         <!-- ** CSS ** -->
         <link rel="stylesheet" type="text/css" href="../lib/ext-3.3.1/resources/css/ext-all.css" />
         <link rel="stylesheet" type="text/css" href="../lib/ext-3.3.1/examples/ux/statusbar/css/statusbar.css" />
+        <link rel="stylesheet" type="text/css" href="./css/default.css" />
 
         <script type="text/javascript" src="http://www.google.com/jsapi"></script> 
         <!-- this is for the local host -->
@@ -50,33 +51,74 @@
         Ext.BLANK_IMAGE_URL = '../lib/ext-3.3.1/resources/images/default/s.gif';
  
         Ext.onReady( function() {
-
-        	MultiLang.init();
             // Ext.Loader.load(['./js/components/Gtimeline.js'], function(){}, this, true);
-            var viewport = new Ext.Viewport({
-                layout: 'border',
-                items: [ topPanel, leftMenuPanel, mainContentPanel, rightPropertyPanel, bottomPanel],
-                onRender: function() {
-                    // console.log( " rendering ......... ");
-                }
-            });
-            /*
-            // get a reference to the HTML element with id "hideit" and add a click listener to it 
-            Ext.get("hideit").on('click', function(){
-                // get a reference to the Panel that was created with id = 'west-panel' 
-                var w = Ext.getCmp('west-panel');
-                // expand or collapse that Panel based on its collapsed property state
-                w.collapsed ? w.expand() : w.collapse();
-            });
-            */
- 
+        	// Ext.get('loading').remove();
+    		(function() {
+
+	        	MultiLang.init();
+	
+	            var viewport = new Ext.Viewport({
+	                layout: 'border',
+	                items: [ topPanel, leftMenuPanel, mainContentPanel, rightPropertyPanel, bottomPanel],
+	                onRender: function() {
+	                    console.log( " rendering ......... ");
+	                    // Ext.get('loading-mask').fadeOut({remove:true});
+	                }
+	            });
+	
+	            var hideMask = function () {
+	                Ext.get('loading').remove();
+	                Ext.fly('loading-mask').fadeOut({
+	                    remove:true,
+	                    // callback : firebugWarning
+	                });
+	            };
+	
+	            hideMask.defer(150);
+	            
+	            /*
+	            // get a reference to the HTML element with id "hideit" and add a click listener to it 
+	            Ext.get("hideit").on('click', function(){
+	                // get a reference to the Panel that was created with id = 'west-panel' 
+	                var w = Ext.getCmp('west-panel');
+	                // expand or collapse that Panel based on its collapsed property state
+	                w.collapsed ? w.expand() : w.collapse();
+	            });
+	            */
+
+    		}).defer(500);
+            
         }); //end onReady
         </script>
  
     </head>
     <body>
 
+	<div id="loading-mask" style=""></div>
+	<div id="loading">
+	    <div class="loading-indicator">
+	    	<img src="../lib/ext-3.3.1/docs/resources/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>
+	    	World Bank Mashup App by pyg 
+	    	<br />
+			<a href="http://worldbank.kauc.net">worldbank.kauc.net</a>
+	    	<br />
+	    	<span id="loading-msg">Loading styles and images...</span>
+	    </div>
+	
+	</div>
+
+<!-- 
+	<div id="loading-mask"></div>
+	<div id="loading">
+	    <div class="loading-indicator">
+	        <img src="../lib/ext-3.3.1/docs/resources/extanim32.gif" width="32" height="32" style="margin-right:8px;" align="absmiddle" />
+		        Loading&hellip;
+	    </div>
+	</div>
+ -->
+
     <div id="header">
+    	<h1>WB unite data</h1>
         <div style="float:right;" id="languages"></div>
         <!-- <div style="float:right;margin:5px;" class="x-small-editor"><input type="text" id="search" /></div> -->
     </div>

@@ -51,6 +51,7 @@ var leftMenuDetailPanel = {
     split: true,
     margins: '0 0 0 0',
     height: 220,
+    bodyStyle: 'padding-bottom:15px;background:#eee;',
     html: '<p class="details-info">When you select a layout from the tree, additional details will display here.</p>'
     // html: detailsText
 };
