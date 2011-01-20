@@ -739,6 +739,8 @@ class AjaxProxy
  * Here's the actual script part. Comment it out or remove it if you simply want
  *  the class' functionality
  */
-$proxy = new AjaxProxy('http://g-proxy.appspot.com/http://api.worldbank.org/');
+$proxy_url = "http://labnol-proxy-server.appspot.com/";
+$proxy_url = "http://g-proxy.appspot.com/";
+$proxy = new AjaxProxy('http://api.worldbank.org/');
 $proxy->execute();
 // $proxy->saveCache();
