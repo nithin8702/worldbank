@@ -88,12 +88,106 @@ Ext.ux.util.getWBRequestURL = function(nodeID) {
     var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
     var indicator = wbEastIndicatorProperty.getSource()[nodeID + '-indicator'];
     
-	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json";
+    var startDt = Ext.getCmp('wb-center-' + nodeID + '-startdt');
+    var endDt = Ext.getCmp('wb-center-' + nodeID + '-enddt');
+    var dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
+    console.log("date parameter : " + dateParam);
+
+    var mapDt = Ext.getCmp('wb-center-' + nodeID + '-geomapdt');
+    mapDt.getValue();
+
+    var per_page = "&per_page=4000";
+	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page;
 }
 
+Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
+
+	var dataStore = new Ext.data.Store ( {
+		url: Ext.ux.util.getWBRequestURL( selectedNodeID ),
+		// url: "./json/countries/AE;EG;HU;QA/indicators/BM.GSR.TOTL",
+        autoLoad: true,
+	    reader: new Ext.ux.data.wbReader( {
+	        root: 'results',
+	        fields: [ {name: 'country', mapping: 'country'},
+	                  {name: 'date', mapping: 'date'},
+	                  {name: 'value', mapping: 'value'} ]
+	    } ),
+        listeners: {
+            load : function( record ) {
+                // Ext.Msg.wait('Loading data','Please wait..'); 
+				console.log("loaded ;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+				console.log(record);
+				return Ext.ux.data.wbChartDataFormat(columns, record);
+            }
+        }
+    } );
+
+};
+
+Ext.ux.data.wbChartDataFormat = function( columns, record ) {
+	var chartData = {'commonData' : new Array(), 'geomapData' : new Array(), 'motionData' : new Array()};
+    var colIdx = 0;
+    // columns = {'AE': 'AE', 'EG' : 'EG', 'HU' : 'HU', 'QA' : 'QA'};
+
+    record.singleSort('date');
+    var store_fields = new Array();
+    Ext.iterate(columns, function(key, val) {
+
+        // record.filterBy( function(record) { return record.get('country').id == val } ); // by country code eg AU, KR
+        record.filterBy( function(record) { return record.get('country').value == key } ); // by country name
+
+        // create fields information
+		if (colIdx < 1) {
+			store_fields.push( {name: 'date', type: 'date'} );
+			store_fields.push( {name: key, type: 'float'} );
+		} else {
+			store_fields.push( {name: key, type: 'float'} );
+		}
+
+    	record.each(function(rowRecord, rowIdx) {
+    		var recVal = rowRecord.get('value');
+    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : rowRecord.get('value');
+    		if (colIdx < 1) {
+    			chartData.commonData.push(new Array( new Date('01/01/' + rowRecord.get('date') ),
+    												 parseFloat( numValue ) ));
+    		} else {
+    			chartData.commonData[rowIdx].push( parseFloat( numValue ) );
+    		}
+        });
+
+        if ( record.isFiltered() ) {
+            record.clearFilter();
+        }
+    	colIdx++;
+    });
+    var store = new Ext.data.ArrayStore({
+        autoDestroy: true,
+        storeId: 'wbGCommonDataStore',
+        idIndex: 0,  
+        fields: store_fields,
+        data: chartData.commonData
+    });
+
+	record.each(function(rowRecord, rowIdx) {
+		var recVal = rowRecord.get('value');
+		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : rowRecord.get('value');
+		chartData.motionData.push(new Array(rowRecord.get('country').value,
+											new Date('01/01/' + rowRecord.get('date') ),
+											parseFloat( numValue ) ));
+    });
+    store = new Ext.data.ArrayStore({
+        autoDestroy: true,
+        storeId: 'wbGMotionDataStore',
+        idIndex: 0,  
+        fields: [ {name: 'country', type: 'string'}, {name: 'date', type: 'date'}, {name: 'value', type: 'float'} ],
+        data: chartData.motionData
+    });
+	console.log(chartData);
+};
+
 Ext.ux.data.wbReader = function(meta, recordType){
-  meta = meta || {};
-  Ext.ux.data.wbReader.superclass.constructor.call(this, meta, recordType || meta.fields);
+    meta = meta || {};
+    Ext.ux.data.wbReader.superclass.constructor.call(this, meta, recordType || meta.fields);
 };
 
 Ext.extend(Ext.ux.data.wbReader, Ext.data.JsonReader, {
@@ -105,7 +199,7 @@ Ext.extend(Ext.ux.data.wbReader, Ext.data.JsonReader, {
     var s = this.meta, Record = this.recordType,
         f = Record.prototype.fields, fi = f.items, fl = f.length, v;
 
-    var root = o[1], c = root.length, totalRecords = c, success = true;
+    var root = o[1], c = o[0].total, totalRecords = c, success = true;
     if(s.totalProperty){
         v = parseInt(this.getTotal(o), 10);
         if(!isNaN(v)){

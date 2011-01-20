@@ -458,11 +458,14 @@ var mainContentPanel = {
 	    {
 	        title: 'google map',
 	        id: 'wb-center-gmap-content-panel',
-	        iconCls: 'tabs',
-	        autoScroll:false,
 	        plugins: [new Ext.ux.Plugin.RemoteComponent({
 	            url : './js/components/wbGmapPanel.js',
-	            loadOn: 'show'
+	            // loadOn: 'show',
+                listeners: {
+	                'beforeadd' : {fn: function(JSON) {
+			        	// JSON['markers'] = markers;
+	                } }
+        		}
 	        })]
 	    } ],
     bbar: new Ext.ux.StatusBar({

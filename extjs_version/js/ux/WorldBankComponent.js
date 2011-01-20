@@ -33,24 +33,43 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
                wbEastCountryProperty.removeProperty(node.text);
            }
        }
-   },
-   buttons: [{
+    },
+    buttons: [{
+        text: 'show geomap',
+        handler: function(){
+            var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
+            var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
+
+            var columns = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
+            Ext.ux.data.wbChartData( columns, selectedNode.id );
+            var tabPanel = Ext.getCmp('wb-center-' + selectedNode.id + '-content-panel');
+            if (tabPanel.items.getCount() < 2) {
+                tabPanel.add({
+                    title: "Geomap",
+                    plugins: [ new Ext.ux.Plugin.RemoteComponent( {
+		                        	url : "./js/components/Ggeomap.js",
+		                        	loadOn: 'show',
+		                            listeners: {
+			                            'success' : {fn: function(){
+                    						console.log("successfully loaded from remote component");
+			                            }},
+			                            'beforeadd' : {fn: function(JSON){
+			                            	// JSON['store'] = dataStore;
+			                            	// JSON['columns'] = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
+			                            }}
+			                    	} 
+                    		} ) ]
+                });
+            }
+        }
+    }, {
         text: 'show graph',
         handler: function(){
             var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
             var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
-            
-        	var dataStore = new Ext.data.Store ( {
-        		// url: Ext.ux.util.getWBRequestURL( selectedNode.id ),
-        		url: "./json/countries/AU;BE;BR;FR;KR/indicators/BM.GSR.TOTL",
-                autoLoad: true,
-        	    reader: new Ext.ux.data.wbReader( {
-        	        root: 'results',
-        	        fields: [ {name: 'date', mapping: 'date'},
-        	                  {name: 'value', mapping: 'value'},
-        	                  {name: 'country', mapping: 'country'} ]
-        	    } )
-            } );
+
+            var columns = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
+            Ext.ux.data.wbChartData( columns, selectedNode.id );
             var tabPanel = Ext.getCmp('wb-center-' + selectedNode.id + '-content-panel');
             if (tabPanel.items.getCount() < 2) {
                 Ext.iterate(gCharts, function(key, val) {
@@ -60,14 +79,14 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 			                        	url : "./js/components/G" + key + ".js",
 			                        	loadOn: 'show',
 			                            listeners: {
-				                            'success' : {fn: function(){
+				                            'success' : { fn: function() {
 
-				                            }},
-				                            'beforeadd' : {fn: function(JSON){
-				                            	JSON['store'] = dataStore;
-				                            	JSON['columns'] = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
-				                            }}
-				                    	} 
+				                            } },
+				                            'beforeadd' : { fn: function(JSON) {
+				                            	// JSON['store'] = dataStore;
+				                            	// JSON['columns'] = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
+				                            } }
+				                    	}
                         		} ) ]
                     });
                 } );

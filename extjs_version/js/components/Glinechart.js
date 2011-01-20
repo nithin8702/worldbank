@@ -1,15 +1,46 @@
 {
-        xtype: 'gvisualization',
-        id: 'lineChart',
-        visualizationPkg: 'linechart',
-        title: 'Company Performance Sample',
-        store: new Ext.data.SimpleStore({
-        fields: [
-            {name: 'yr', type: 'string'}
-            ,{name: 'sales', type: 'int'}
-            ,{name: 'expenses', type: 'int'}
-        ],
-        data: [['2004',1000,400],['2005',1170,460],['2006',860,580],['2007',1030,540]]
-    }),
-        columns: Ext.getCmp('wb-center-' + selectedNode.id + '-tree-panel').getChecked()
+    xtype: 'gvisualization',
+    id: 'wb-google-lineChart',
+    visualizationPkg: 'linechart',
+    visualizationCfg: {
+		chartArea : { left : 'auto',
+					top : 'auto',
+					width : 'auto',
+					height : 'auto' },
+		curveType : 'none',
+		fontSize : '9',
+		fontName : 'Arial',
+		gridlineColor : '#CCC',
+		hAxis : { direction : 1,
+				textPosition : 'out',
+				textStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+				title : null,
+				titleTextStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+				slantedText : 'automatic',
+				slantedTextAngle : 30,
+				maxAlternation : 2,
+				showTextEvery : 'automatic' },
+		interpolateNulls : false,
+		legend : 'right',
+		legendTextStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+		lineWidth : 2,
+		pointSize : 7,
+		reverseCategories : false,
+		title : '',
+		titlePosition : 'in',
+		titleTextStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+		tooltipTextStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+		vAxis : {baseline : 'automatic',
+				baselineColor : 'black',
+				direction : 1,
+				logScale : false,
+				textPosition : 'out',
+				textStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+				title : '',
+				titleTextStyle : "{color: 'black', fontName: Arial, fontSize: 9}",
+				maxValue : 'automatic',
+				minValue : 'automatic' }
+	},
+	height: 400,
+    store : Ext.StoreMgr.lookup('wbGCommonDataStore')
 }

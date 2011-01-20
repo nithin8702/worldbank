@@ -1,6 +1,6 @@
 {
 	xtype: 'gvisualization',
-	id: 'timeline',
+	id: 'wb-google-timeline',
 	visualizationPkg: {'annotatedtimeline': 'AnnotatedTimeLine'},
 	visualizationCfg: {
 		allowHtml: true,
@@ -8,6 +8,6 @@
 		displayExactValues: true,
 		wmode: 'transparent'
 	},
-	height: 480,
-	title: 'Greatest DJIA Daily Point Gains'
+	height: 400,
+    store : Ext.StoreMgr.lookup('wbGCommonDataStore')
 }

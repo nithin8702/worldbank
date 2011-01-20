@@ -9,8 +9,6 @@
         <link rel="stylesheet" type="text/css" href="./css/default.css" />
 
         <script type="text/javascript" src="http://www.google.com/jsapi"></script> 
-        <!-- this is for the local host -->
-        <script src="http://maps.google.com/maps?file=api&v=3.x&key=ABQIAAAA2CKu_qQN-JHtlfQ5L7BLlRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQl3I3p2yrGARYK4f4bkjp9NHpm5w" type="text/javascript"></script>
 
         <!-- base library -->
         <script type="text/javascript" src="../lib/ext-3.3.1/adapter/ext/ext-base.js"></script>
@@ -29,7 +27,6 @@
         <script type="text/javascript" src="./js/multi-lang.js"></script>
  
         <!-- overrides to library -->
-        <script type="text/javascript" src="../lib/ext-3.3.1/examples/ux/GMapPanel.js"></script>
         <script type="text/javascript" src="../lib/ext-3.3.1/examples/ux/statusbar/StatusBar.js"> </script>
  
         <!-- extensions -->
@@ -38,7 +35,7 @@
         <script type="text/javascript" src="./js/ux/WorldBankComponent.js"></script>
         <script type="text/javascript" src="./js/ux/GVisualizationPanel.js"></script>
         <script type="text/javascript" src="./js/ux/RemoteComponent.js"></script>
- 
+
         <!-- page specific -->
         <script type="text/javascript" src="./js/TopPanel.js"></script>
         <script type="text/javascript" src="./js/MenuPanel.js"></script>
@@ -46,6 +43,10 @@
         <script type="text/javascript" src="./js/BottomPanel.js"></script>
         <script type="text/javascript" src="./js/MainPanel.js"></script>
 
+        <!-- this is for the local host -->
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript" src="./js/ux/Ext.ux.GMapPanel3.js"></script>
+        
         <script type="text/javascript">
         // Path to the blank image should point to a valid location on your server
         Ext.BLANK_IMAGE_URL = '../lib/ext-3.3.1/resources/images/default/s.gif';
@@ -74,7 +75,7 @@
 	                });
 	            };
 	
-	            hideMask.defer(150);
+	            hideMask.defer(250);
 	            
 	            /*
 	            // get a reference to the HTML element with id "hideit" and add a click listener to it 
