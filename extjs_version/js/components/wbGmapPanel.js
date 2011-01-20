@@ -6,10 +6,8 @@
     mapConfOpts: ['enableScrollWheelZoom','enableDoubleClickZoom','enableDragging'],
     mapControls: ['GSmallMapControl','GMapTypeControl','NonExistantControl'],
     setCenter: {
-        geoCodeAddr: '4 Yawkey Way, Boston, MA, 02215-3409, USA',
-        marker: {
-          title: 'Fenway Park'
-        }
+        lat: 42.339641,
+        lng: -71.094224
     },
     iconCls: 'tabs',
     autoScroll:false,
@@ -48,7 +46,7 @@
 			                    markers.push(rowRec);
 			                });
 				        	console.log(markers);
-				        	console.log( Ext.getCmp('wb-center-gmap-content-panel') );
+				        	console.log( google_map_component );
 				        	// Ext.getCmp('wb-center-gmap-content-panel').addMarkers(markers);
 				        	this.addMarkers(markers);
 	                    }
@@ -67,6 +65,7 @@
     },
     listeners: {
         'mapready': function(map) {
+    		google_map_component = map;
             // store.load();
         }
     }
