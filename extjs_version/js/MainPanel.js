@@ -374,39 +374,6 @@ var countriesTopicTreePanel= {
     flex: 1
 };
 
-/*
-            var ds = new Ext.data.Store({
-                url: './json/countries.json',
-                autoLoad: true,
-                reader: new Ext.ux.data.wbReader({
-                    root: 'results',
-                    totalProperty: 'total',
-                    fields: [{name: 'value', mapping: 'iso2Code'},
-                             {name: 'label', mapping: 'name'}
-                    ]
-                }),
-                listeners:{
-                   load:{ scope:this, fn:function(store) {
-                       console.log("listners load for data store");
-                       console.log(store);
-                       var countryTreeRoot = new Ext.tree.AsyncTreeNode({expanded:true,leaf:false,text:'countries',children: []});
-                       Ext.each(store.data.items, function(val, key) {
-                           console.log(val);
-                           console.log(key);
-                           countryTreeRoot.appendChild(new Ext.tree.TreeNode({
-            text:val.label,
-            leaf:true,
-            cls:"country"
-        }));
-
-                           // console.log(item.label );
-                       });
-                       countriesSourceTreePanel.root = countryTreeRoot;
-                   }}
-                }
-            });
-*/
-
 var sourceMainPanel = new Ext.TabPanel({ 
     id: 'wb-center-source-content-panel', 
     title: 'Source Content Panel', 

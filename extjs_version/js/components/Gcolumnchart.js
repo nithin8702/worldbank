@@ -13,6 +13,7 @@
 				logScale : false,
 				textPosition : 'out',
 				title : null,
+				textStyle : "{color: 'black', fontName: 'Arial', fontSize: 9}"
 				// maxValue : 'automatic',
 				// minValue : 'automatic'
 				}

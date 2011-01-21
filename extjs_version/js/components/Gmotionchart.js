@@ -3,7 +3,7 @@
     id: 'wb-google-motionChart',
     visualizationPkg: 'motionchart',
 	visualizationCfg: {
-		height : 450,
+		height : 350,
 		width : 800,
 		showChartButtons : true,
 		showHeader : true,
@@ -15,6 +15,6 @@
 		showYScalePicker : true,
 		showAdvancedPanel : true
 	},
-	height : 450,
+	height : 440,
     store : Ext.StoreMgr.lookup('wbGMotionDataStore')
 }

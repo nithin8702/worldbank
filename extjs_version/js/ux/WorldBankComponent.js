@@ -133,6 +133,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 });
 
 Ext.ux.component.wbIndicatorFormPanel = Ext.extend(Ext.form.FormPanel, {
+	id : 'wb-north-indicator-formpanel',
     region:'north',
     height: 120,
     border: false,

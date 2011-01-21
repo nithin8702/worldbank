@@ -52,13 +52,13 @@ var leftMenuDetailPanel = {
     margins: '0 0 0 0',
     height: 220,
     bodyStyle: 'padding-bottom:15px;background:#eee;',
-    html: '<p class="details-info">When you select a layout from the tree, additional details will display here.</p>'
+    html: '<p class="details-info"></p>'
     // html: detailsText
 };
 
 var leftMenuPanel = {
     layout: 'border',
-    title: 'West Side (Left Menu Panel)',
+    title: 'WB unite data menu',
     id: 'wb-west-menu-panel',
     region:'west',
     collapsible: true,

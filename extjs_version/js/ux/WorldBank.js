@@ -97,7 +97,7 @@ Ext.ux.util.getWBRequestURL = function(nodeID) {
     mapDt.getValue();
 
     var per_page = "&per_page=4000";
-	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page;
+	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page+dateParam;
 }
 
 Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
@@ -115,8 +115,8 @@ Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
         listeners: {
             load : function( record ) {
                 // Ext.Msg.wait('Loading data','Please wait..'); 
-				console.log("loaded ;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-				console.log(record);
+				// console.log("loaded ;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+				// console.log(record);
 				return Ext.ux.data.wbChartDataFormat(columns, record);
             }
         }
@@ -182,7 +182,7 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
         fields: [ {name: 'country', type: 'string'}, {name: 'date', type: 'date'}, {name: 'value', type: 'float'} ],
         data: chartData.motionData
     });
-	console.log(chartData);
+	// console.log(chartData);
 };
 
 Ext.ux.data.wbReader = function(meta, recordType){
