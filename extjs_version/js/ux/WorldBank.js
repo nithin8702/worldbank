@@ -91,7 +91,7 @@ Ext.ux.util.getWBRequestURL = function(nodeID) {
     var startDt = Ext.getCmp('wb-center-' + nodeID + '-startdt');
     var endDt = Ext.getCmp('wb-center-' + nodeID + '-enddt');
     var dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
-    console.log("date parameter : " + dateParam);
+    // console.log("date parameter : " + dateParam);
 
     var mapDt = Ext.getCmp('wb-center-' + nodeID + '-geomapdt');
     mapDt.getValue();

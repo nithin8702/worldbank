@@ -147,9 +147,9 @@ Ext.ux.component.wbIndicatorFormPanel = Ext.extend(Ext.form.FormPanel, {
     },
     defaults: {
         msgTarget: 'side'
-    },
+    }
     // defaultType: 'datefield',
-//     items : [ ]
+    // items : [ ]
 });
 
 Ext.ux.component.wbDataStore = Ext.extend(Ext.data.Store, {

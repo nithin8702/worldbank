@@ -384,7 +384,7 @@ var sourceMainPanel = new Ext.TabPanel({
         layout:'hbox',
         layoutConfig: {
             align : 'stretch',
-            pack  : 'start',
+            pack  : 'start'
         },
         title:'Configuration',
         items:[wbSourceIndicatorPanel, countriesSourceTreePanel]
@@ -401,7 +401,7 @@ var topicMainPanel = new Ext.TabPanel({
         layout:'hbox',
         layoutConfig: {
             align : 'stretch',
-            pack  : 'start',
+            pack  : 'start'
         },
         title:'Configuration',
         items:[wbTopicIndicatorPanel, countriesTopicTreePanel]
