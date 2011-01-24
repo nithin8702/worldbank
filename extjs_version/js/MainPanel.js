@@ -54,12 +54,12 @@ var wbChartIndicatorPanel = {
 		            id : 'wb-center-source-combo',
 		            fieldLabel : 'Source',
 		            name:  'source',
-		            store : new Ext.ux.component.wbDataStore ( {url: './json/sources.json'}),
+		            store : new Ext.ux.component.wbDataStore ( {url: wb_json_data_url_prefix+'sources.json'}),
 		            listeners : {
 		                 change : function( field, newValue, oldValue ) {
 		                     var wbIndicatorCombo = Ext.getCmp('wb-center-source-indicator-combo');
 		                     // in case of source, file name is indicators pl
-		                     var indicator_url = './json/source/' + newValue + '/indicators.json';
+		                     var indicator_url = wb_json_data_url_prefix+'source/' + newValue + '/indicators.json';
 		                     wbIndicatorCombo.setDisabled(true);
 		                     wbIndicatorCombo.setValue('');
 		                     // wbIndicatorCombo.store.proxy.setUrl(indicator_url); 
@@ -101,7 +101,7 @@ var wbChartIndicatorPanel = {
                 fieldLabel : 'Topic ',
                 id : 'wb-center-topic-combo',
                 store : new Ext.ux.component.wbDataStore ( {
-                        url: './json/topics.json',
+                        url: wb_json_data_url_prefix + 'topics.json',
                         reader: new Ext.ux.data.wbReader({
                             root: 'results',
                             fields: [{name: 'value', mapping: 'id'},
@@ -113,7 +113,7 @@ var wbChartIndicatorPanel = {
                     change : function( field, newValue, oldValue ) {
                        var wbIndicatorCombo = Ext.getCmp('wb-center-topic-indicator-combo');
                        // in case of topic, file name is indicator
-                       var indicator_url = './json/topic/' + newValue + '/indicator.json';
+                       var indicator_url = wb_json_data_url_prefix +'topic/' + newValue + '/indicator.json';
                        wbIndicatorCombo.setDisabled(true);
                        wbIndicatorCombo.setValue('');
                        wbIndicatorCombo.store.removeAll();

@@ -9,7 +9,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     animate:true,
     enableDD:true,
     containerScroll: true,
-    loader: new Ext.ux.tree.wbTreeLoader({dataUrl: './json/countries.json'}),
+    loader: new Ext.ux.tree.wbTreeLoader({dataUrl: wb_json_data_url_prefix+'countries.json'}),
     root: {
         nodeType: 'async',
         text: 'Ext JS',

@@ -113,7 +113,7 @@ Ext.ux.cmp.wbGeomapTabPanel = function( mapType ) {
                     pageSize     : 5,
                     width        : 400,
                     store : new Ext.ux.component.wbDataStore ( {
-                        url: './json/indicators.json',
+                        url: wb_json_data_url_prefix+'indicators.json',
                         reader: new Ext.ux.data.wbReader({
                             root: 'results',
                             fields: [{name: 'value', mapping: 'id'},

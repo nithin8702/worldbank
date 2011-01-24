@@ -12,8 +12,7 @@ var leftTreeMenuPanel = {
     autoScroll:true,
     collapseFirst:false,
     root: new Ext.tree.AsyncTreeNode(),
-    dataUrl:'./json/left_menu.json',
-
+    dataUrl:wb_json_data_url_prefix + 'left_menu.json',
     listeners: {
         'render': function(tp){
             tp.getSelectionModel().on('selectionchange', function(tree, node){

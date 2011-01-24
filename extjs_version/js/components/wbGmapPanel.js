@@ -115,7 +115,7 @@
         'mapready': function(map) {
     		google_map_component = map;
         	var dataStore = new Ext.data.Store ( {
-        		url: "./json/countries.json",
+        		url: wb_json_data_url_prefix + "countries.json",
                 autoLoad: true,
         	    reader: new Ext.ux.data.wbReader( {
         	        root: 'results',
