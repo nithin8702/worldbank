@@ -1,6 +1,5 @@
 {
-    xtype: 'gvisualization',
-    id: 'wb-google-geomap',
+	xtype: 'gvisualization',
 	visualizationPkg: {'geomap': 'GeoMap'},
 	visualizationCfg: {
 		region: 'world',

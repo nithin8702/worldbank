@@ -5,5 +5,5 @@
 	visualizationCfg: {
 		region: 'world',
 	},
-	height: 400
+	// height: 400
 }

@@ -1,6 +1,6 @@
 
 /** Ext JsonReader for World Bank Data**/
-Ext.namespace('Ext.ux.data', 'Ext.ux.util', 'Ext.ux.tree');
+Ext.namespace('Ext.ux.data', 'Ext.ux.util', 'Ext.ux.tree', 'Ext.ux.cmp');
 
 Ext.ux.util.OnDemandLoadByAjax = function() {
     loadComponent = function(component) {
@@ -78,23 +78,87 @@ var oScripts = [
 ];
 */
 
-Ext.ux.util.getWBRequestURL = function(nodeID) {
+Ext.ux.cmp.wbGeomapTabPanel = function( mapType ) {
+	return {
+        title: 'google map',
+        id: 'wb-center-' + mapType + '-panel',
+        layout: 'anchor',
+        items:[ { 
+        	// title: "Geomap",
+        	anchor: '100%, 80%',
+        	id: 'wb-center-' + mapType + '-content-panel',
+            plugins: [new Ext.ux.Plugin.RemoteComponent({
+	            url : './js/components/Ggeomap.js',
+	            loadOn: 'show',
+                listeners: {
+	                'beforeadd' : {fn: function(JSON) {
+            			console.log("loaded;;;;;;;;;; ");
+			        	// JSON['markers'] = markers;
+	                } }
+        		}
+            })]
+		}, {
+            xtype : 'form',
+            id : 'wb-center-' + mapType + '-indicator-form-panel',
+            anchor: '100%, 20%',
+            labelWidth: 90,
+            title: 'Indicator selection',
+            items : [ {
+            		xtype		 : 'combo',
+            		id			 : 'wb-center-' + mapType + '-combo',
+                    fieldLabel   : 'Query string',
+                    displayField : 'indicator',
+                    typeAhead    : true,
+                    loadingText  : 'Searching...',
+                    pageSize     : 5,
+                    width        : 400,
+                    store : new Ext.ux.component.wbDataStore ( {
+                        url: './json/indicators.json',
+                        reader: new Ext.ux.data.wbReader({
+                            root: 'results',
+                            fields: [{name: 'value', mapping: 'id'},
+                                     {name: 'label', mapping: 'value'}
+                             ]
+                       })
+                    })
+                 }, {
+        	        xtype: 'sliderfield',
+        	        id : 'wb-center-' + mapType + 'dt',
+        	        fieldLabel: 'Geomap Date : ',
+        	        increment: 1,
+        	        minValue: 1960,
+        	        maxValue: 2010,
+                    anchor: '100%',
+                    value: 2000,
+                    tipText: function(thumb) {
+                        return String(thumb.value) + ' year';
+                    }
+        	    }  ]
+        } ]
+	};
+}
+
+Ext.ux.util.getWBRequestURL = function( indicatorID ) {
 
     var countryList = new Array();
-    var wbEastCountryProperty = Ext.getCmp('wb-east-' + nodeID + '-country-property-grid');
+    var wbEastCountryProperty = Ext.getCmp('wb-east-country-property-grid');
     Ext.iterate(wbEastCountryProperty.getSource(), function(key, val) {
     	countryList.push(val);
     });
     var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
-    var indicator = wbEastIndicatorProperty.getSource()[nodeID + '-indicator'];
-    
-    var startDt = Ext.getCmp('wb-center-' + nodeID + '-startdt');
-    var endDt = Ext.getCmp('wb-center-' + nodeID + '-enddt');
-    var dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
-    // console.log("date parameter : " + dateParam);
+    var indicator = wbEastIndicatorProperty.getSource()[indicatorID + '-indicator'];
 
-    var mapDt = Ext.getCmp('wb-center-' + nodeID + '-geomapdt');
-    mapDt.getValue();
+    var startDt = Ext.getCmp('wb-center-chart-startdt');
+    var endDt = Ext.getCmp('wb-center-chart-enddt');
+    var dateParam = "";
+    if (Ext.getCmp('wb-center-chart-month-checkbox').getValue()) {
+    	// TODO
+    	// implement to get month value and append to the year value.
+    	// date=2009M01:2010M08
+    	dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
+    } else {
+    	dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
+    }
 
     var per_page = "&per_page=4000";
 	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page+dateParam;

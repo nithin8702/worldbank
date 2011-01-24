@@ -3,15 +3,15 @@
     cls: 'feeds-node',
     expanded:true,
     children: [{
-        text: 'By sources',
-        id : 'source',
+        text: 'Data Chart',
+        id : 'chart',
         leaf: true
     },{
-        text: 'By topics',
-        id : 'topic',
+        text: 'GeoMap Chart',
+        id : 'geomap',
         leaf: true
     },{
-        text: 'Google Map',
+        text: 'Google Map & Kiva',
         id : 'gmap',
         leaf: true
     }]

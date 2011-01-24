@@ -22,9 +22,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     frame: true,
     listeners: {
        'checkchange': function(node, checked){
-           var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
-           var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
-    	   var wbEastCountryProperty = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid');
+    	   var wbEastCountryProperty = Ext.getCmp('wb-east-country-property-grid');
            if(checked){
                node.getUI().addClass('complete');
                wbEastCountryProperty.setProperty(node.text, node.id, true);
@@ -37,12 +35,22 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     buttons: [{
         text: 'show geomap',
         handler: function(){
-            var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
-            var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
+    		var indicatorID = "";
+    		switch(true) {
+    			case (Ext.getCmp('wb-center-source-indicator-fieldset').checkbox.dom.checked):
+    				indicatorID = "source";
+    				break;
+    			case (Ext.getCmp('wb-center-topic-indicator-fieldset').checkbox.dom.checked):
+    				indicatorID = "topic";
+    				break;
+    			default:
+    				indicatorID = "unknown";
+    				break;
+    		}
 
-            var columns = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
-            Ext.ux.data.wbChartData( columns, selectedNode.id );
-            var tabPanel = Ext.getCmp('wb-center-' + selectedNode.id + '-content-panel');
+            var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
+            Ext.ux.data.wbChartData( columns, indicatorID );
+            var tabPanel = Ext.getCmp('wb-center-chart-content-panel');
             if (tabPanel.items.getCount() < 2) {
                 tabPanel.add({
                     title: "Geomap",
@@ -65,12 +73,22 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     }, {
         text: 'show graph',
         handler: function(){
-            var wbWestMenuPanel = Ext.getCmp('wb-west-tree-menu-panel');
-            var selectedNode = wbWestMenuPanel.getSelectionModel().getSelectedNode();
+		var indicatorID = "";
+		switch(true) {
+			case (Ext.getCmp('wb-center-source-indicator-fieldset').checkbox.dom.checked):
+				indicatorID = "source";
+				break;
+			case (Ext.getCmp('wb-center-topic-indicator-fieldset').checkbox.dom.checked):
+				indicatorID = "topic";
+				break;
+			default:
+				indicatorID = "unknown";
+				break;
+		}
 
-            var columns = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
-            Ext.ux.data.wbChartData( columns, selectedNode.id );
-            var tabPanel = Ext.getCmp('wb-center-' + selectedNode.id + '-content-panel');
+        var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
+        Ext.ux.data.wbChartData( columns, indicatorID );
+            var tabPanel = Ext.getCmp('wb-center-chart-content-panel');
             if (tabPanel.items.getCount() < 2) {
                 Ext.iterate(gCharts, function(key, val) {
                     tabPanel.add({
@@ -83,8 +101,8 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 
 				                            } },
 				                            'beforeadd' : { fn: function(JSON) {
-				                            	// JSON['store'] = dataStore;
-				                            	// JSON['columns'] = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
+				                            	JSON['height'] = tabPanel.getFrameHeight();
+				                            	JSON['width'] = tabPanel.getFrameWidth();
 				                            } }
 				                    	}
                         		} ) ]
@@ -114,7 +132,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
                      });
 */
 
-            var msg = '', selNodes = Ext.getCmp('wb-center-' + selectedNode.id + '-tree-panel').getChecked();
+            var msg = '', selNodes = Ext.getCmp('wb-center-chart-tree-panel').getChecked();
             Ext.each(selNodes, function(node){
                 if(msg.length > 0){
                     msg += ', ';
@@ -125,7 +143,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
                 title: 'Completed Tasks',
                 msg: msg.length > 0 ? msg : 'None',
                 icon: Ext.Msg.INFO,
-                minWidth: 200,
+                minWidth: 500,
                 buttons: Ext.Msg.OK
             });
         }
@@ -133,7 +151,6 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 });
 
 Ext.ux.component.wbIndicatorFormPanel = Ext.extend(Ext.form.FormPanel, {
-	id : 'wb-north-indicator-formpanel',
     region:'north',
     height: 120,
     border: false,

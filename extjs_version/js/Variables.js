@@ -1,5 +1,7 @@
 Ext.namespace('Ext.wb.variables');
 
+var wb_json_data_url_prefix = "../data/json/";
+
 var gCharts = {'datagrid':'Data Grid', 'timeline':'Timeline', 'barchart':'Bar Chart', 'linechart':'Line Chart', 'columnchart':'Column Chart', 'motionchart':'Motion Chart', 'table':'Data Table'};
 
 var worldbank_api_url = "http://api.worldbank.org";

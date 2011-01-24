@@ -5,7 +5,7 @@ $pod_mode = false;
 if ($pod_mode) {
 	set_include_path('/home/urn4u9k1/php'); // for production
 } else {
-	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+	error_reporting( E_ERROR | E_WARNING | E_PARSE );
 
 	date_default_timezone_set('Australia/ACT');
 

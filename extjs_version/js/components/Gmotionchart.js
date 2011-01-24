@@ -15,6 +15,6 @@
 		showYScalePicker : true,
 		showAdvancedPanel : true
 	},
-	height : 440,
+	// height : 440,
     store : Ext.StoreMgr.lookup('wbGMotionDataStore')
 }

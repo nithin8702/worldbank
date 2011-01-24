@@ -45,7 +45,7 @@
 							var markers = new Array();
 				            Ext.each(records, function(node){
 			            		var geoLoc = node.get('location').geo.pairs.split(" ");
-				            	console.log(geoLoc);
+				            	// console.log(geoLoc);
 			                    markers.push({
 		                            lat: geoLoc[0],
 		                            lng: geoLoc[1],
