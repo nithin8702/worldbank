@@ -90,8 +90,6 @@ Ext.ux.GDataTableAdapter = function(config) {
       
 }();
 
-
-
 Ext.ux.GVisualizationPanel = Ext.extend(Ext.Panel, {
     // These are required by Google API
     // To add more visualizations you can extend
@@ -108,7 +106,7 @@ Ext.ux.GVisualizationPanel = Ext.extend(Ext.Panel, {
         'barchart': 'BarChart',
         'columnchart': 'ColumnChart',
         'motionchart': 'MotionChart',
-        'geomap': 'Geomap'
+        'geomap': 'GeoMap'
     },
     
     /**

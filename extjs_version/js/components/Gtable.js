@@ -8,6 +8,6 @@
 		allowHtml: true,
 		showRowNumber: true
 	},
-	// height: 420,
-    store : Ext.StoreMgr.lookup('wbGCommonDataStore')
+	// wbGGeomapDataStore
+    store : 'wbGGeomapDataStore'
 }

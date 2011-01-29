@@ -1,9 +1,9 @@
 {
     xtype: 'gvisualization',
-    id: 'intensityMap',
+    id: 'wb-google-IntensityMap',
     visualizationPkg: 'intensitymap',
 	visualizationCfg: {
-		region: 'world',
+		region: 'world'
 	},
-	// height: 400
+	store : Ext.StoreMgr.lookup('wbGGeomapDataStore')
 }

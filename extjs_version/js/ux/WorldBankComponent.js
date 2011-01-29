@@ -33,44 +33,6 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
        }
     },
     buttons: [{
-        text: 'show geomap',
-        handler: function(){
-    		var indicatorID = "";
-    		switch(true) {
-    			case (Ext.getCmp('wb-center-source-indicator-fieldset').checkbox.dom.checked):
-    				indicatorID = "source";
-    				break;
-    			case (Ext.getCmp('wb-center-topic-indicator-fieldset').checkbox.dom.checked):
-    				indicatorID = "topic";
-    				break;
-    			default:
-    				indicatorID = "unknown";
-    				break;
-    		}
-
-            var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
-            Ext.ux.data.wbChartData( columns, indicatorID );
-            var tabPanel = Ext.getCmp('wb-center-chart-content-panel');
-            if (tabPanel.items.getCount() < 2) {
-                tabPanel.add({
-                    title: "Geomap",
-                    plugins: [ new Ext.ux.Plugin.RemoteComponent( {
-		                        	url : "./js/components/Ggeomap.js",
-		                        	loadOn: 'show',
-		                            listeners: {
-			                            'success' : {fn: function(){
-                    						console.log("successfully loaded from remote component");
-			                            }},
-			                            'beforeadd' : {fn: function(JSON){
-			                            	// JSON['store'] = dataStore;
-			                            	// JSON['columns'] = Ext.getCmp('wb-east-' + selectedNode.id + '-country-property-grid').getSource();
-			                            }}
-			                    	} 
-                    		} ) ]
-                });
-            }
-        }
-    }, {
         text: 'show graph',
         handler: function(){
 		var indicatorID = "";
@@ -89,7 +51,13 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
         var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
         Ext.ux.data.wbChartData( columns, indicatorID );
             var tabPanel = Ext.getCmp('wb-center-chart-content-panel');
-            if (tabPanel.items.getCount() < 2) {
+            var tabPanelCount = tabPanel.items.getCount();
+        	if (tabPanelCount > 2) {	// in case of updating base on the new data.
+            	while(--tabPanelCount) {
+            		tabPanel.get(tabPanelCount).destroy();
+            	}
+        	}
+            if (tabPanelCount < 2) {
                 Ext.iterate(gCharts, function(key, val) {
                     tabPanel.add({
                         title: val,
@@ -101,13 +69,15 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 
 				                            } },
 				                            'beforeadd' : { fn: function(JSON) {
-				                            	JSON['height'] = tabPanel.getFrameHeight();
-				                            	JSON['width'] = tabPanel.getFrameWidth();
+				                            	JSON['height'] = tabPanel.getHeight() - tabPanel.getFrameHeight();
+				                            	JSON['width'] = tabPanel.getWidth();
 				                            } }
 				                    	}
                         		} ) ]
                     });
                 } );
+            } else {
+
             }
 /*
                      new Ext.data.Connection({
@@ -160,7 +130,7 @@ Ext.ux.component.wbIndicatorFormPanel = Ext.extend(Ext.form.FormPanel, {
     bodyStyle:'padding:5px 5px 0',
     labelPad: 20,
     layoutConfig: {
-        labelSeparator: ''
+        labelSeparator: ' : '
     },
     defaults: {
         msgTarget: 'side'

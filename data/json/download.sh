@@ -2,7 +2,7 @@
 proxy_url="http://g-proxy.appspot.com/"
 wb_url="http://api.worldbank.org/"
 
-bases=(sources countries incomeLevels indicators lendingTypes topics)
+bases=(sources countries incomeLevels indicators lendingTypes topics regions)
 parameter="?format=json&page=1&per_page=4000"
 
 for base in ${bases[@]}

@@ -1,6 +1,6 @@
 
 /** Ext JsonReader for World Bank Data**/
-Ext.namespace('Ext.ux.data', 'Ext.ux.util', 'Ext.ux.tree', 'Ext.ux.cmp');
+Ext.namespace('Ext.ux.data', 'Ext.ux.util', 'Ext.ux.tree');
 
 Ext.ux.util.OnDemandLoadByAjax = function() {
     loadComponent = function(component) {
@@ -76,7 +76,7 @@ var oScripts = [
         }
     ]
 ];
-*/
+
 
 Ext.ux.cmp.wbGeomapTabPanel = function( mapType ) {
 	return {
@@ -137,8 +137,28 @@ Ext.ux.cmp.wbGeomapTabPanel = function( mapType ) {
         } ]
 	};
 }
+*/
 
-Ext.ux.util.getWBRequestURL = function( indicatorID ) {
+Ext.ux.util.getDateValFromWB = function( dateStr ) {
+	var newDateStr = '';
+	switch(true) {
+		case (dateStr.indexOf('Q') > 0):
+			var dateArray = dateStr.split('Q');
+			dateArray[dateArray.length-1] = dateArray[dateArray.length-1] * 3;
+			dateArray[dateArray.length-1] = String.leftPad(dateArray[dateArray.length-1], 2, '0');
+			newDateStr = dateArray.join('-') + '-01';
+			break;
+		case (dateStr.indexOf('M') > 0):
+			newDateStr = dateStr.split('M').join('-') + '-01';
+			break;
+		default:
+			newDateStr = dateStr + '01-01';
+			break;
+	}
+	return newDateStr;
+}
+
+Ext.ux.util.getWBChartURL = function( indicatorID ) {
 
     var countryList = new Array();
     var wbEastCountryProperty = Ext.getCmp('wb-east-country-property-grid');
@@ -152,22 +172,91 @@ Ext.ux.util.getWBRequestURL = function( indicatorID ) {
     var endDt = Ext.getCmp('wb-center-chart-enddt');
     var dateParam = "";
     if (Ext.getCmp('wb-center-chart-month-checkbox').getValue()) {
-    	// TODO
-    	// implement to get month value and append to the year value.
-    	// date=2009M01:2010M08
-    	dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
+    	dateParam = "&date=" + startDt.getValue().format('Y\\Mm') + ":" + endDt.getValue().format('Y\\Mm');
     } else {
-    	dateParam = "&date=" + startDt.getValue().getFullYear() + ":" + endDt.getValue().getFullYear();
+    	dateParam = "&date=" + startDt.getValue().format('Y') + ":" + endDt.getValue().format('Y');
+    }
+    
+    var mrvParam = "";
+    if (Ext.getCmp('wb-center-chart-mrv').getValue()) {
+    	mrvParam = "&mrv=" + Ext.getCmp('wb-center-chart-mrv').getValue();
     }
 
     var per_page = "&per_page=4000";
-	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page+dateParam;
+	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page+mrvParam+dateParam;
+}
+
+Ext.ux.util.getWBGeomapURL = function( ) {
+
+    var wbGeoMapIndicator = Ext.getCmp('wb-center-geomap-indicator-combo').getValue();
+
+    var geoMapDate = Ext.getCmp('wb-center-geomap-date');
+    var dateParam = "";
+    if ( Ext.getCmp('wb-center-geomap-month-checkbox').getValue() ) {
+    	dateParam = "&date=" + geoMapDate.getValue().format('Y\\Mm');
+    } else {
+    	dateParam = "&date=" + geoMapDate.getValue().format('Y');
+    }
+    
+    var mrvParam = "";
+    if (Ext.getCmp('wb-center-chart-mrv').getValue()) {
+    	mrvParam = "&mrv=" + Ext.getCmp('wb-center-chart-mrv').getValue();
+    }
+
+    var per_page = "&per_page=4000";
+	return "../lib/ajax-proxy.php?route=/countries/all/indicators/" + wbGeoMapIndicator + "?format=json"+per_page+mrvParam+dateParam;
+}
+
+Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countrySortVal) {
+	var dataStore = new Ext.data.Store ( {
+		url: wb_json_data_url_prefix + "countries.json",
+        autoLoad: true,
+	    reader: new Ext.ux.data.wbReader( {
+	        root: 'results',
+	        fields: [ {name: 'ISO Code',     mapping: 'iso2Code'},
+	                  {name: 'Name',         mapping: 'name'},
+	                  {name: 'Region',       mapping: 'region'},
+	                  {name: 'AdminRegion',  mapping: 'adminregion'},
+	                  {name: 'IncomeLevel',  mapping: 'incomeLevel'},
+	                  {name: 'LendingType',  mapping: 'lendingType'},
+	                  {name: 'CapitalCity',  mapping: 'capitalCity'},
+	                  {name: 'longitude',    mapping: 'longitude'},
+	                  {name: 'latitude',     mapping: 'latitude'} ]
+	    } ),
+        listeners: {
+            load : function( store ) {
+				var markers = new Array();
+            	store.each(function(record, rowIdx) {
+                    marker_info = {
+                        lat: record.get('latitude'),
+                        lng: record.get('longitude'),
+                        marker: {
+                            icon: "http://www.google.com/mapfiles/marker_green.png",
+                            title: GmapInfoWindowTpl.apply(Ext.apply({msg:'Click to view more details', br:''}, record.data)),
+                            infoWindow: {
+                                content: GmapInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, record.data))
+                            }
+                        }
+                    };
+                    switch(true) {
+                    	case (record.get(countrySortKey).id == countrySortVal):
+                    		markers.push(marker_info);
+                    		break;
+                    	default:
+                    		// markers.push(marker_info);
+                    		break;
+                    }
+                });
+            	googleMapCmp.addMarkers(markers);
+            }
+        }
+    } );
 }
 
 Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
 
 	var dataStore = new Ext.data.Store ( {
-		url: Ext.ux.util.getWBRequestURL( selectedNodeID ),
+		url: Ext.ux.util.getWBChartURL( selectedNodeID ),
 		// url: "./json/countries/AE;EG;HU;QA/indicators/BM.GSR.TOTL",
         autoLoad: true,
 	    reader: new Ext.ux.data.wbReader( {
@@ -189,7 +278,7 @@ Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
 };
 
 Ext.ux.data.wbChartDataFormat = function( columns, record ) {
-	var chartData = {'commonData' : new Array(), 'geomapData' : new Array(), 'motionData' : new Array()};
+	var chartData = {'commonData' : new Array(), 'motionData' : new Array()};
     var colIdx = 0;
     // columns = {'AE': 'AE', 'EG' : 'EG', 'HU' : 'HU', 'QA' : 'QA'};
 
@@ -210,13 +299,17 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
 
     	record.each(function(rowRecord, rowIdx) {
     		var recVal = rowRecord.get('value');
-    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : rowRecord.get('value');
+    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
     		if (colIdx < 1) {
-    			chartData.commonData.push(new Array( new Date('01/01/' + rowRecord.get('date') ),
+    			chartData.commonData.push(new Array( new Date( Ext.ux.util.getDateValFromWB(rowRecord.get('date')) ),
     												 parseFloat( numValue ) ));
     		} else {
     			chartData.commonData[rowIdx].push( parseFloat( numValue ) );
     		}
+    		
+    		chartData.motionData.push(new Array(rowRecord.get('country').value,
+										new Date( Ext.ux.util.getDateValFromWB(rowRecord.get('date')) ),
+										parseFloat( numValue ) ));
         });
 
         if ( record.isFiltered() ) {
@@ -224,7 +317,8 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
         }
     	colIdx++;
     });
-    var store = new Ext.data.ArrayStore({
+
+    new Ext.data.ArrayStore({
         autoDestroy: true,
         storeId: 'wbGCommonDataStore',
         idIndex: 0,  
@@ -232,17 +326,14 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
         data: chartData.commonData
     });
 
-	record.each(function(rowRecord, rowIdx) {
-		var recVal = rowRecord.get('value');
-		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : rowRecord.get('value');
-		chartData.motionData.push(new Array(rowRecord.get('country').value,
-											new Date('01/01/' + rowRecord.get('date') ),
-											parseFloat( numValue ) ));
-    });
-    store = new Ext.data.ArrayStore({
+	new Ext.data.ArrayStore({
         autoDestroy: true,
         storeId: 'wbGMotionDataStore',
-        idIndex: 0,  
+        sortInfo: {
+            field: 'date',
+            direction: 'DESC' // or 'DESC' (case sensitive for local sorting)
+        },
+        // idIndex: 1,  
         fields: [ {name: 'country', type: 'string'}, {name: 'date', type: 'date'}, {name: 'value', type: 'float'} ],
         data: chartData.motionData
     });

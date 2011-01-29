@@ -3,7 +3,7 @@
 //    var url = "/countries/AU;GB;JP;US/indicators/BM.GSR.TOTL.CD?format=json&per_page=10000&date=1990:2009";
 function makeQueryURL() {
     var array_of_checked_values = $("#countryCode").multiselect("getChecked").map(function(){ return this.value; });
-    var proxy_url = "./ajax-proxy.php?route=";
+    var proxy_url = "../lib/ajax-proxy.php?route=";
     var selected_countries = $.makeArray(array_of_checked_values).join(";");
     var date_range = "&date=" + $("#yearFrom").val() + ":" + $("#yearTo").val()
     return proxy_url + "/countries/"+ selected_countries +"/indicators/"+ $("#indicatorCode").val() +"?format=json&per_page=10000"+date_range;

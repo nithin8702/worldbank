@@ -41,7 +41,7 @@ var wbChartIndicatorPanel = {
             xtype:'fieldset',
             id : 'wb-center-source-indicator-fieldset',
             checkboxToggle:true,
-            title: 'By Source - fetches most recent values based on the number specified',
+            title: 'By Source - fetches indicator according to the source of indicators',
             autoHeight:true,
             collapsed: true,
             onCheckClick : function(){
@@ -88,7 +88,7 @@ var wbChartIndicatorPanel = {
             xtype:'fieldset',
             id : 'wb-center-topic-indicator-fieldset',
             checkboxToggle:true,
-            title: 'By Topic - fetches most recent values based on the number specified',
+            title: 'By Topic - fetches indicator according to the topic of indicators',
             autoHeight:true,
             collapsed: true,
             onCheckClick : function(){
@@ -141,12 +141,12 @@ var wbChartIndicatorPanel = {
  		} ]
     }, {
 		xtype: 'wbindicatorformpanel',
-        labelWidth: 86,
-        title: 'Parameter Selection',
+		labelWidth: 90,
+		title: 'Parameter Selection',
         anchor:'100% 50%',
 		items: [ {
 			xtype: 'compositefield',
-	        fieldLabel: 'Date Range : ',
+	        fieldLabel: 'Date Range',
 	        msgTarget : 'side',
 	        items: [ {
 					xtype : "datefield",
@@ -165,85 +165,145 @@ var wbChartIndicatorPanel = {
 					value: '2010-01-01',
 					format: 'm/d/Y',
 					startDateField: 'wb-center-chart-startdt' // id of the start date field
-			},{xtype: 'checkbox', id : 'wb-center-chart-month-checkbox', boxLabel: 'Month use flag'} ]
+			},{ xtype:'checkbox', 
+				id:'wb-center-chart-month-checkbox', 
+				boxLabel:'Month use flag',
+				handler: function(chkBoxObj, checked) {
+					if(checked) {
+						Ext.getCmp('wb-center-chart-quarterly-startdt-combo').disable();
+						Ext.getCmp('wb-center-chart-quarterly-enddt-combo').disable();
+						Ext.getCmp('wb-center-quarterly-month-checkbox').reset();
+					} else {
+						Ext.getCmp('wb-center-chart-quarterly-startdt-combo').enable();
+						Ext.getCmp('wb-center-chart-quarterly-enddt-combo').enable();
+					}
+				}
+			} ]
 		}, {
+			xtype: 'compositefield',
+	        fieldLabel: 'Quarter',
+	        msgTarget : 'side',
+	        items: [ {
+            	xtype : 		'combo',
+ 	        	id:             'wb-center-chart-quarterly-startdt-combo',
+	            width:          100,
+	            mode:           'local',
+	            value:          '',
+	            triggerAction:  'all',
+	            forceSelection: false,
+	            editable:       false,
+	            name:           'quarter',
+	            hiddenName:     'quarter',
+	            displayField:   'name',
+	            valueField:     'value',
+	            store:          new Ext.data.JsonStore( {
+	                fields : ['name', 'value'],
+	                data   : [ {name : '1 Quarter', value: '1Q'},
+	                           {name : '2 Quarter', value: '2Q'},
+	                           {name : '3 Quarter', value: '3Q'},
+	                           {name : '4 Quarter', value: '4Q'} ]
+	            } )
+	        }, {xtype: 'displayfield', value: ' ~ '}, {
+            	xtype : 		'combo',
+ 	        	id:             'wb-center-chart-quarterly-enddt-combo',
+	            width:          100,
+	            mode:           'local',
+	            value:          '',
+	            triggerAction:  'all',
+	            forceSelection: false,
+	            editable:       false,
+	            name:           'quarter',
+	            hiddenName:     'quarter',
+	            displayField:   'name',
+	            valueField:     'value',
+	            store:          new Ext.data.JsonStore( {
+	                fields : ['name', 'value'],
+	                data   : [ {name : '1 Quarter', value: '1Q'},
+	                           {name : '2 Quarter', value: '2Q'},
+	                           {name : '3 Quarter', value: '3Q'},
+	                           {name : '4 Quarter', value: '4Q'} ]
+	            } )
+            }, { xtype:'checkbox', 
+				id:'wb-center-quarterly-month-checkbox', 
+				boxLabel:'Quarterly use flag',
+				handler: function(chkBoxObj, checked) {
+					if(checked) {
+						Ext.getCmp('wb-center-chart-month-checkbox').reset();
+					} else {
+
+					}
+				}
+			}]
+    	}, {
         	id:             'wb-center-chart-lendingTypes',
         	xtype:          'combo',
-            width:          70,
+            width:          90,
             mode:           'local',
             value:          '',
             triggerAction:  'all',
             forceSelection: true,
             editable:       false,
-            fieldLabel:     'Lending Types : ',
-            name:           'lendingTypes',
-            hiddenName:     'lendingTypes',
+            fieldLabel:     'Lending Types',
             displayField:   'name',
             valueField:     'value',
-            store:          new Ext.data.JsonStore({
-                fields : ['name', 'value'],
-                data   : [
-                    {name : 'IBRD',   value: 'IBD'},
-                    {name : 'Blend',  value: 'IDB'},
-                    {name : 'IDA',   value: 'IDX'},
-                    {name : 'Not classified',   value: 'NC'}
-                ]
-            })
+            store:          new Ext.data.JsonStore( {
+                fields : [ 'name', 'value' ],
+                data   : [ {name : 'IBRD',   			value: 'IBD'},
+                           {name : 'Blend',  			value: 'IDB'},
+                           {name : 'IDA',   			value: 'IDX'},
+                           {name : 'Not classified',	value: 'NC'} ]
+            	} )
         }, {
-            xtype: 'numberfield',
-            id: 'wb-center-chart-mrv',
-            fieldLabel: 'MRV',
-            name: 'MRV'
-    	}, {
-        xtype:'fieldset',
-        checkboxToggle:true,
-        title: 'MRV - fetches most recent values based on the number specified',
-        autoHeight:true,
-        defaults: {width: 210},
-        defaultType: 'combo',
-        collapsed: true,
-        items :[ {
-        	id:             'wb-center-chart-gapfill',
-            width:          50,
-            mode:           'local',
-            value:          'Y',
-            triggerAction:  'all',
-            forceSelection: true,
-            editable:       false,
-            fieldLabel:     'Gapfill',
-            name:           'gapfill',
-            hiddenName:     'gapfill',
-            displayField:   'name',
-            valueField:     'value',
-            store:          new Ext.data.JsonStore({
-                fields : ['name', 'value'],
-                data   : [
-                    {name : 'Yes',   value: 'Y'},
-                    {name : 'No',  value: 'N'}
-                ]
-            })
-        }, {
-        	id:             'wb-center-chart-frequency',
-            width:          80,
-            mode:           'local',
-            value:          'Y',
-            triggerAction:  'all',
-            forceSelection: true,
-            editable:       false,
-            fieldLabel:     'Frequency',
-            name:           'frequency',
-            hiddenName:     'frequency',
-            displayField:   'name',
-            valueField:     'value',
-            store:          new Ext.data.JsonStore({
-                fields : ['name', 'value'],
-                data   : [
-                    {name : 'yearly',   value: 'Y'},
-                    {name : 'monthly',  value: 'M'},
-                    {name : 'quarterly', value: 'Q'}
-                ]
-            })
-        } ]
+	        xtype:'fieldset',
+	        checkboxToggle:true,
+	        title: 'MRV - fetches most recent values based on the number specified',
+	        autoHeight:true,
+	        defaults: {width: 210},
+	        defaultType: 'combo',
+	        collapsed: true,
+	        items :[ {
+	            xtype: 'numberfield',
+	            id: 'wb-center-chart-mrv',
+	            fieldLabel: 'MRV',
+	            name: 'MRV'
+	        }, {
+	        	id:             'wb-center-chart-gapfill',
+	            width:          50,
+	            mode:           'local',
+	            value:          'Y',
+	            triggerAction:  'all',
+	            forceSelection: true,
+	            editable:       false,
+	            fieldLabel:     'Gapfill',
+	            name:           'gapfill',
+	            hiddenName:     'gapfill',
+	            displayField:   'name',
+	            valueField:     'value',
+	            store:          new Ext.data.JsonStore( {
+	                fields : ['name', 'value'],
+	                data   : [ {name : 'Yes',   value: 'Y'},
+	                           {name : 'No',  value: 'N'} ]
+	            } )
+	        }, {
+	        	id:             'wb-center-chart-frequency',
+	            width:          80,
+	            mode:           'local',
+	            value:          'Y',
+	            triggerAction:  'all',
+	            forceSelection: true,
+	            editable:       false,
+	            fieldLabel:     'Frequency',
+	            name:           'frequency',
+	            hiddenName:     'frequency',
+	            displayField:   'name',
+	            valueField:     'value',
+	            store:          new Ext.data.JsonStore( {
+	                fields : ['name', 'value'],
+	                data   : [ {name : 'yearly',   value: 'Y'},
+	                           {name : 'monthly',  value: 'M'},
+	                           {name : 'quarterly', value: 'Q'} ]
+	            } )
+	        } ]
         } ]
 	  } ]
 };
@@ -300,15 +360,15 @@ var countriesChartTreePanel = {
    			}
    		}), ' ', ' ',
    		{
-              iconCls: 'icon-expand-all',
+            iconCls: 'icon-expand-all',
    			tooltip: 'Expand All',
-              handler: function(){ this.root.expand(true); },
-              scope: this
+            handler: function(){ this.root.expand(true); },
+            scope: this
         }, '-', {
-              iconCls: 'icon-collapse-all',
-              tooltip: 'Collapse All',
-              handler: function(){ this.root.collapse(true); },
-              scope: this
+            iconCls: 'icon-collapse-all',
+            tooltip: 'Collapse All',
+            handler: function(){ this.root.collapse(true); },
+            scope: this
        } ]
        ============================================================================================= */
 };
@@ -330,96 +390,204 @@ var chartMainPanel = new Ext.TabPanel({
     } ]
 });
 
-var geomapMainPanel = { 
+var geomapMainPanel = {
     id: 'wb-center-geomap-content-panel', 
-    layout: 'anchor',
-    // title: 'GeoMap Content Panel', 
+    layout:'vbox',
     border: false,
+    layoutConfig: {
+        align : 'stretch',
+        pack  : 'start'
+    },
+    // title: 'GeoMap Content Panel', 
     items: [{
     	xtype : "tabpanel",
+    	flex : 1,
     	title: 'google geo map',
-        anchor: '100%, 80%',
         id: 'wb-center-geomap-tabpanel',
+        border: false,
         tabPosition: 'bottom',
-        items:[ {
-            	title: "Geomap",
-             	id: 'wb-center-geomap-content-panel',
-        		plugins: [new Ext.ux.Plugin.RemoteComponent({
-		            url : './js/components/Ggeomap.js',
-		            loadOn: 'show',
-	                listeners: {
-		                'beforeadd' : {fn: function(JSON) {
-        					var tabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
-        					JSON['height'] = tabPanel.getFrameHeight();
-        					JSON['width'] = tabPanel.getFrameWidth();
-		                } }
-	        		}
-	            })]
-        	}, { 
-            	title: "intensity map",
-             	id: 'wb-center-intensitymap-content-panel',
-                plugins: [new Ext.ux.Plugin.RemoteComponent({
-    	            url : './js/components/Gintensitymap.js',
-    	            loadOn: 'show',
-                    listeners: {
-    	                'beforeadd' : {fn: function(JSON) {
-							var tabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
-                			JSON['height'] = tabPanel.getFrameHeight();
-                			JSON['width'] = tabPanel.getFrameWidth();
-    	                } }
-            		}
-                })]
-    		} ]
+        activeTab: 0,
+        items:[  ]
 		}, {
-            xtype : 'wbindicatorformpanel',
+            xtype : 'form',
             id : 'wb-center-geomap-indicator-form-panel',
-            anchor: '100%, 20%',
+            height: 90,
+            border: false,
+            frame: true,
+            bodyStyle:'padding:3px 3px 0',
+            split: true,
             labelWidth: 90,
             title: 'Indicator selection',
             items : [ {
-            		xtype		 : 'combo',
-            		id			 : 'wb-center-geomap-combo',
-                    fieldLabel   : 'Query Indicator',
-                    // typeAhead    : true,
-                    loadingText  : 'Searching...',
-                    pageSize     : 5,
-                    width        : 400,
-                    store        : new Ext.data.JsonStore({
-                    	// baseParams : {q: ''},
-                    	// url : '../lib/indicator-query.php',
-	                    storeId: 'geomapStore',
-	                    // root: 'results',
-	                    idProperty: 'id',
-                    	fields : ['id', 'value'],
-                    	data : []
-                    }),
-                    valueField: 'id',
-                    displayField: 'value',
-            		/*
-                    store        : new Ext.data.JsonStore({
-                        autoDestroy: true,
-                        baseParams : {q : "tax"},
-                        url: '../lib/indicator-query.php',
-                        storeId: 'geomapStore',
-                        root: 'results',
-                        idProperty: 'id',
-                        fields: ['id', 'value']
-                    }),
-                    */
-                    listeners : {
-		                keyup : {fn: function( txtFld, eventObj ) {
-            				if (txtFld.getValue().length == 3) {
-            					this.store.proxy = new Ext.data.HttpProxy({url: '../lib/indicator-query.php' +txtFld.getValue()});
-            					this.store.root = 'results';
-            					this.store.setBaseParam('q', txtFld.getValue());
-				            	this.store.reload( );
-            				}
-            			}
-        			} }
-            		/*
-
-                    */
-                 }, {
+                layout:'column',
+                items:[ {
+                    columnWidth : .5,
+                    layout: 'form',
+                    labelWidth: 95,
+	                items : [ {
+	            		xtype		 : 'combo',
+	            		mode         : 'local',
+	            		id			 : 'wb-center-geomap-indicator-combo',
+	                    fieldLabel   : 'Query Indicator',
+	                    typeAhead    : true,
+	                    loadingText  : 'Searching...',
+	                    pageSize     : 5,
+	                    width        : 400,
+	                    store        : new Ext.data.JsonStore({
+		                    storeId: 'wbGeomapStore',
+	                    	fields : ['id', 'name'],
+	                    	data : []
+	                    }),
+	                    valueField: 'id',
+	                    displayField: 'name',
+	                    doQuery : function(q, forceAll) {
+	            			if (q.length > 3) {
+		    					var store = new Ext.data.JsonStore({
+		                        	// baseParams : {q: ''},
+		                        	url : '../lib/indicator-query.php?q='+q,
+		    	                    root: 'results',
+		    	                    idProperty: 'id',
+		                        	fields : ['id', 'name'],
+		                            listeners : {
+		                                load : function( records, options ) {
+											var loadData = new Array();
+											records.each( function(row) {
+												loadData.push({'id' : row.get('id'), 'name': row.get('name')});
+											})
+		    								var wbGeomapStore = Ext.StoreMgr.lookup('wbGeomapStore');
+		    								wbGeomapStore.removeAll();
+		    								wbGeomapStore.loadData( loadData );
+		    								// console.log(wbGeomapStore);
+		                                }
+		                            }
+		                        });
+		    					store.load({params : {q: q}});
+	            			}
+	            		}
+	                } ]
+                }, {
+                    columnWidth : .5,
+                    layout: 'form',
+                    labelWidth: 0,
+	                items : [ {
+	                	xtype: 'displayfield',
+	                	value: ' You need to input at least 4 letters to search an indicator. '
+	                } ]
+            	}
+            	] }, {
+                     layout:'column',
+                     items:[ {
+                         columnWidth : .3,
+                         layout: 'form',
+                         labelWidth: 85,
+                         items : [ {
+		         			xtype: 'compositefield',
+		        	        fieldLabel: 'Date',
+		        	        msgTarget : 'side',
+		        	        items: [ {
+		        					xtype : "datefield",
+		        					name: 'geomap-date',
+		        					id: 'wb-center-geomap-date',
+		        					value: '2005-01-01',
+		        					width: 100,
+		        					format: 'm/d/Y'
+		        				},{
+		        					xtype: 'checkbox',
+		        					id : 'wb-center-geomap-month-checkbox',
+		        					boxLabel: 'Month use flag',
+		        					handler: function(chkBoxObj, checked) {
+		        						if(checked)
+		        							Ext.getCmp('wb-center-geomap-quarterly-combo').disable();
+		        						else
+		        							Ext.getCmp('wb-center-geomap-quarterly-combo').enable();
+		        					}
+		        				}
+		        			]
+		        		} ]
+                     }, {
+                         columnWidth : .3,
+                         layout: 'form',
+                         labelWidth: 45,
+                         items : [ {
+                        	xtype : 		'combo',
+             	        	id:             'wb-center-geomap-quarterly-combo',
+            	            width:          80,
+            	            mode:           'local',
+            	            value:          '',
+            	            triggerAction:  'all',
+            	            forceSelection: false,
+            	            editable:       false,
+            	            fieldLabel:     'Quarter',
+            	            name:           'quarter',
+            	            hiddenName:     'quarter',
+            	            displayField:   'name',
+            	            valueField:     'value',
+            	            store:          new Ext.data.JsonStore( {
+            	                fields : ['name', 'value'],
+            	                data   : [ {name : '1 Quarter', value: '1Q'},
+            	                           {name : '2 Quarter', value: '2Q'},
+            	                           {name : '3 Quarter', value: '3Q'},
+            	                           {name : '4 Quarter', value: '4Q'} ]
+            	            } )
+            	        } ]
+                     }, {
+                         columnWidth : .4,
+                         // layout: 'form',
+                         items : [ {
+                        	 xtype: 'button',
+                             text: 'show geomap',
+                             handler: function(evt) {
+                        		var dataStore = new Ext.data.Store ( {
+                        			url: Ext.ux.util.getWBGeomapURL(),
+                        	        autoLoad: true,
+                        		    reader: new Ext.ux.data.wbReader( {
+                        		        root: 'results',
+                        		        fields: [ {name: 'country', mapping: 'country'},
+                        		                  {name: 'value', mapping: 'value'} ]
+                        		    } ),
+                        	        listeners: {
+                        	            load : function( records ) {
+                        					var geoMapData = new Array();
+                        					records.each( function(record) {
+                        						var recVal = record.get('value');
+                        			    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
+                        						geoMapData.push( new Array( record.get('country').id, parseFloat(numValue) ) );
+                        					});
+                        					new Ext.data.ArrayStore({
+                        				        autoDestroy: true,
+                        				        storeId: 'wbGGeomapDataStore',
+                        				        // idIndex: 1,  
+                        				        fields: [ {name: 'country', type: 'string'}, {name: 'value', type: 'float'} ],
+                        				        data: geoMapData
+                        				    });
+                        					
+                        					// geoMapTabPanel.activate(1);
+                        				}
+                        	        }
+                        	    } );
+								var geoMapTabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
+								Ext.iterate(gMaps, function(key, val) {
+									geoMapTabPanel.add({
+								    	title: val,
+								     	id: 'wb-center-' + key + '-content-tabpanel',
+										plugins: [new Ext.ux.Plugin.RemoteComponent({
+								            url : './js/components/G' + key + '.js',
+								            loadOn: 'show',
+								            listeners: {
+								                'beforeadd' : {fn: function(JSON) {
+													JSON['height'] = geoMapTabPanel.getHeight() - geoMapTabPanel.getFrameHeight();
+													JSON['width'] = geoMapTabPanel.getFrameWidth();
+								                } }
+								    		}
+								        })]
+									});
+								});
+                             }
+                         } ]
+                     } ]
+                 } ]
+        		/*
+        		{
         	        xtype: 'sliderfield',
         	        id : 'wb-center-geomapdt',
         	        fieldLabel: 'Geomap Date : ',
@@ -435,7 +603,8 @@ var geomapMainPanel = {
                     	console.log(v);
                         this.setValue(v, undefined, true);
                     }
-        	    } ]
+        	    } 
+        	    */
 		} ]
 };
 
@@ -450,7 +619,7 @@ var mainContentPanel = {
 	         title: 'introduction',
 	         iconCls: 'tabs',
 	         autoScroll:true,
-	         margins: '10 10 10 10',
+	         bodyStyle:'padding:10px 10px 0',
 	         autoLoad: {url: './templates/introduction.htm', scripts: true}
 	    }, chartMainPanel, geomapMainPanel, 
 	    {
@@ -458,7 +627,7 @@ var mainContentPanel = {
 	        id: 'wb-center-gmap-content-panel',
 	        plugins: [new Ext.ux.Plugin.RemoteComponent({
 	            url : './js/components/wbGmapPanel.js',
-	            // loadOn: 'show',
+	            loadOn: 'show',
                 listeners: {
 	                'beforeadd' : {fn: function(JSON) {
 			        	// JSON['markers'] = markers;
@@ -474,6 +643,7 @@ var mainContentPanel = {
         text: 'Ready',
         iconCls: 'x-status-valid',
         items: [
+            /*
             {
                 text: 'Show Warning & Clear',
                 handler: function (){
@@ -501,6 +671,7 @@ var mainContentPanel = {
                     sb.clearStatus(); 
                 }
             },
+            */
             '-',
             {xtype: 'tbtext', id: 'main-panel-clock-status-bar', text: ' '},            	
             ' '

@@ -1,9 +1,10 @@
 {
 	xtype: 'gvisualization',
-	visualizationPkg: {'geomap': 'GeoMap'},
+	id: 'wb-google-GeoMap',
+	visualizationPkg: 'geomap',
 	visualizationCfg: {
 		region: 'world',
 		dataMode: 'regions'
 	},
-	height: 400
+	store : Ext.StoreMgr.lookup('wbGGeomapDataStore')
 }

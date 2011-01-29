@@ -1,7 +1,7 @@
 <?PHP
 error_reporting(E_ERROR | E_WARNING | E_PARSE );
 
-$json = file_get_contents('../extjs_version/json/indicators.json', FILE_USE_INCLUDE_PATH);
+$json = file_get_contents('../data/json/indicators.json', FILE_USE_INCLUDE_PATH);
 
 $obj = json_decode($json);
 

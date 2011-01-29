@@ -19,7 +19,6 @@ var leftTreeMenuPanel = {
                 var el = Ext.getCmp('wb-west-detail-panel').body;
                 if(node && node.leaf){
                     Ext.getCmp('wb-center-content-panel').layout.setActiveItem('wb-center-' + node.id + '-content-panel');
-                	Ext.getCmp('wb-east-property-grid-tabpanel').activate('wb-east-country-property-grid');
                 	
                 	switch (true) {
                 		case (node.id == 'gmap'):
@@ -35,6 +34,7 @@ var leftTreeMenuPanel = {
                 				Ext.getCmp('wb-west-menu-panel').toggleCollapse(); // close west menu panel
                 			break;
                 		default:
+                        	Ext.getCmp('wb-east-property-grid-tabpanel').activate('wb-east-country-property-grid');
                 			if (Ext.getCmp('wb-east-property-panel').collapsed)
                 				Ext.getCmp('wb-east-property-panel').toggleCollapse(); // close east property panel
                 			if (Ext.getCmp('wb-west-menu-panel').collapsed)

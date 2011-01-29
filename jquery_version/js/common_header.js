@@ -1,6 +1,8 @@
-    var region_code = new Array("EAP", "EAS", "ECA", "ECS", "LAC", "LCN", "MNA", "MEA", "NAC", "SAS", "SSA",  "SSF");
+	var wb_json_data_url_prefix = "../data/json/";
+
+	var region_code = new Array("EAP", "EAS", "ECA", "ECS", "LAC", "LCN", "MNA", "MEA", "NAC", "SAS", "SSA",  "SSF");
     var incomeLevel = new Array("NOC", "OEC", "HIC", "HPC", "LIC", "LMC", "LMY", "MIC", "UMC");
-    var countries_url = "/worldbank/json/countries.json";
+    var countries_url = wb_json_data_url_prefix + "countries.json";
     $.getJSON(countries_url, function(response) {
         $.each(response[1] , function(key, value) { 
             switch (true) {
@@ -28,7 +30,7 @@
             close: function(){
                 var array_of_checked_values = $("select").multiselect("getChecked").map(function(){ return this.value; });
                 var selected_countries = $.makeArray(array_of_checked_values).join(";");
-                var proxy_url = "/lib/ajax-proxy.php?route=";
+                var proxy_url = "../lib/ajax-proxy.php?route=";
                 var url = "/countries/"+ selected_countries +"/indicators/"+ $("#indicatorCode").val() +"?format=json&per_page=10000";
             }
         }).multiselectfilter();
