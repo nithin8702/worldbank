@@ -160,6 +160,8 @@ Ext.ux.util.getDateValFromWB = function( dateStr ) {
 
 Ext.ux.util.getWBChartURL = function( indicatorID ) {
 
+    var per_page = "&per_page=4000";
+
     var countryList = new Array();
     var wbEastCountryProperty = Ext.getCmp('wb-east-country-property-grid');
     Ext.iterate(wbEastCountryProperty.getSource(), function(key, val) {
@@ -167,44 +169,45 @@ Ext.ux.util.getWBChartURL = function( indicatorID ) {
     });
     var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
     var indicator = wbEastIndicatorProperty.getSource()[indicatorID + '-indicator'];
-
-    var startDt = Ext.getCmp('wb-center-chart-startdt');
-    var endDt = Ext.getCmp('wb-center-chart-enddt');
-    var dateParam = "";
-    if (Ext.getCmp('wb-center-chart-month-checkbox').getValue()) {
-    	dateParam = "&date=" + startDt.getValue().format('Y\\Mm') + ":" + endDt.getValue().format('Y\\Mm');
-    } else {
-    	dateParam = "&date=" + startDt.getValue().format('Y') + ":" + endDt.getValue().format('Y');
-    }
     
-    var mrvParam = "";
-    if (Ext.getCmp('wb-center-chart-mrv').getValue()) {
-    	mrvParam = "&mrv=" + Ext.getCmp('wb-center-chart-mrv').getValue();
+    var parameter = "";
+    if (!Ext.getCmp('wb-center-chart-mrv-fieldset').collapsed && Ext.getCmp('wb-center-chart-mrv-number').getValue()) {
+    	parameter = "&mrv=" + Ext.getCmp('wb-center-chart-mrv-number').getValue();
+    	parameter += "&Gapfill=" + Ext.getCmp('wb-center-chart-mrv-gapfill').getValue();
+    	parameter += "&frequency=" + Ext.getCmp('wb-center-chart-mrv-frequency').getValue();
+    } else {
+        var startDt = Ext.getCmp('wb-center-chart-startdt').getValue();
+        var endDt = Ext.getCmp('wb-center-chart-enddt').getValue();
+        if (Ext.getCmp('wb-center-chart-month-checkbox').getValue()) {
+        	parameter = "&date=" + startDt.format('Y\\Mm') + ":" + endDt.format('Y\\Mm');
+        } else if ( Ext.getCmp('wb-center-quarterly-month-checkbox').getValue() ) {
+        	var start_quarter = Ext.getCmp('wb-center-chart-quarterly-startdt-combo').getValue();
+        	var end_quarter = Ext.getCmp('wb-center-chart-quarterly-enddt-combo').getValue();
+        	parameter = "&date=" + startDt.format('Y') + start_quarter + ":" + endDt.format('Y') + end_quarter;
+        } else {
+        	parameter = "&date=" + startDt.format('Y') + ":" + endDt.format('Y');
+        }
     }
 
-    var per_page = "&per_page=4000";
-	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+per_page+mrvParam+dateParam;
+	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+parameter+per_page;
 }
 
 Ext.ux.util.getWBGeomapURL = function( ) {
 
     var wbGeoMapIndicator = Ext.getCmp('wb-center-geomap-indicator-combo').getValue();
 
-    var geoMapDate = Ext.getCmp('wb-center-geomap-date');
-    var dateParam = "";
+    var geoMapDate = Ext.getCmp('wb-center-geomap-date').getValue();
+    var parameter = "";
     if ( Ext.getCmp('wb-center-geomap-month-checkbox').getValue() ) {
-    	dateParam = "&date=" + geoMapDate.getValue().format('Y\\Mm');
+    	parameter = "&date=" + geoMapDate.format('Y\\Mm');
+    } else if ( Ext.getCmp('wb-center-geomap-quarterly-checkbox').getValue() ) {
+    	parameter = "&date=" + geoMapDate.format('Y') + Ext.getCmp('wb-center-geomap-quarterly-combo').getValue();
     } else {
-    	dateParam = "&date=" + geoMapDate.getValue().format('Y');
-    }
-    
-    var mrvParam = "";
-    if (Ext.getCmp('wb-center-chart-mrv').getValue()) {
-    	mrvParam = "&mrv=" + Ext.getCmp('wb-center-chart-mrv').getValue();
+    	parameter = "&date=" + geoMapDate.format('Y');
     }
 
     var per_page = "&per_page=4000";
-	return "../lib/ajax-proxy.php?route=/countries/all/indicators/" + wbGeoMapIndicator + "?format=json"+per_page+mrvParam+dateParam;
+	return "../lib/ajax-proxy.php?route=/countries/all/indicators/" + wbGeoMapIndicator + "?format=json"+parameter+per_page;
 }
 
 Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countrySortVal) {
