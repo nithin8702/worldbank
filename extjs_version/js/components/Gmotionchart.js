@@ -16,5 +16,5 @@
 		showAdvancedPanel : true
 	},
 	// height : 440,
-    store : Ext.StoreMgr.lookup('wbGMotionDataStore')
+    store : 'wbGMotionDataStore'
 }

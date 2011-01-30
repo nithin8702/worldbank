@@ -152,7 +152,7 @@ Ext.ux.util.getDateValFromWB = function( dateStr ) {
 			newDateStr = dateStr.split('M').join('-') + '-01';
 			break;
 		default:
-			newDateStr = dateStr + '01-01';
+			newDateStr = dateStr + '-01-01';
 			break;
 	}
 	return newDateStr;
@@ -303,15 +303,16 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
     	record.each(function(rowRecord, rowIdx) {
     		var recVal = rowRecord.get('value');
     		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
+    		var newDateFormat = Ext.ux.util.getDateValFromWB(rowRecord.get('date'));
     		if (colIdx < 1) {
-    			chartData.commonData.push(new Array( new Date( Ext.ux.util.getDateValFromWB(rowRecord.get('date')) ),
+    			chartData.commonData.push(new Array( new Date( newDateFormat ),
     												 parseFloat( numValue ) ));
     		} else {
     			chartData.commonData[rowIdx].push( parseFloat( numValue ) );
     		}
-    		
+
     		chartData.motionData.push(new Array(rowRecord.get('country').value,
-										new Date( Ext.ux.util.getDateValFromWB(rowRecord.get('date')) ),
+										new Date( newDateFormat ),
 										parseFloat( numValue ) ));
         });
 

@@ -561,6 +561,7 @@ var geomapMainPanel = {
                         	 xtype: 'button',
                              text: 'show geomap',
                              handler: function(evt) {
+								var geoMapTabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
                         		var dataStore = new Ext.data.Store ( {
                         			url: Ext.ux.util.getWBGeomapURL(),
                         	        autoLoad: true,
@@ -586,10 +587,11 @@ var geomapMainPanel = {
                         				    });
                         					
                         					// geoMapTabPanel.activate(1);
+                        					Ext.getCmp('wb-center-geomap-content-tabpanel').show();
                         				}
                         	        }
                         	    } );
-								var geoMapTabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
+
 					            var geoMapTabPanelCount = geoMapTabPanel.items.getCount();
 					        	if (geoMapTabPanelCount > 1) {	// in case of updating base on the new data.
 					            	while(geoMapTabPanelCount--) {
@@ -607,7 +609,7 @@ var geomapMainPanel = {
 									            listeners: {
 									                'beforeadd' : {fn: function(JSON) {
 														JSON['height'] = geoMapTabPanel.getHeight() - geoMapTabPanel.getFrameHeight();
-														JSON['width'] = geoMapTabPanel.getFrameWidth();
+														JSON['width'] = geoMapTabPanel.getWidth();
 									                } }
 									    		}
 									        })]
