@@ -18,6 +18,5 @@
 				// minValue : 'automatic'
 				}
 	},
-    // height: 400,
-    store : Ext.StoreMgr.lookup('wbGCommonDataStore')
+    store : 'wbGCommonDataStore'
 }

@@ -8,6 +8,5 @@
 		allowHtml: true,
 		showRowNumber: true
 	},
-	// wbGGeomapDataStore
-    store : 'wbGGeomapDataStore'
+    store : 'wbGCommonDataStore'
 }

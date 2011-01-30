@@ -576,18 +576,23 @@ var geomapMainPanel = {
                         					records.each( function(record) {
                         						var recVal = record.get('value');
                         			    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
-                        						geoMapData.push( new Array( record.get('country').id, parseFloat(numValue) ) );
+                        						geoMapData.push( new Array( record.get('country').id, parseFloat(numValue), record.get('country').value ) );
                         					});
                         					new Ext.data.ArrayStore({
                         				        autoDestroy: true,
                         				        storeId: 'wbGGeomapDataStore',
                         				        // idIndex: 1,  
+                        				        fields: [ {name: 'country code', type: 'string'}, {name: 'value', type: 'float'}, {name: 'country name', type: 'string'} ],
+                        				        data: geoMapData
+                        				    }); 
+                        					new Ext.data.ArrayStore({
+                        				        autoDestroy: true,
+                        				        storeId: 'wbGIntensitymapDataStore',
+                        				        // idIndex: 1,  
                         				        fields: [ {name: 'country', type: 'string'}, {name: 'value', type: 'float'} ],
                         				        data: geoMapData
-                        				    });
-                        					
-                        					// geoMapTabPanel.activate(1);
-                        					Ext.getCmp('wb-center-geomap-content-tabpanel').show();
+                        				    }); 
+                        					geoMapTabPanel.activate(0);
                         				}
                         	        }
                         	    } );
