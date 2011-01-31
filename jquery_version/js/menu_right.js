@@ -20,10 +20,12 @@ $("#linechart_btn").button().click( function() {
          var data = new google.visualization.DataTable(jsonData, 0.6);
          var chartData = new google.visualization.DataTable();
          chartData.addColumn('date', 'Year');
+         console.log(data);
          console.log("before loop");
          console.log("lenght : " + array_of_checked_values.length);
          
          for (var countryIdx = 0; countryIdx < array_of_checked_values.length; countryIdx++) {
+        	 console.log(array_of_checked_values[countryIdx]);
              filteredRows = data.getFilteredRows([{column: 3, value: array_of_checked_values[countryIdx]}]);
              console.log("filter length: " + filteredRows.length);
              chartData.addColumn('number', data.getValue(filteredRows[0], 3));

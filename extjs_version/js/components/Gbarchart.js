@@ -7,7 +7,7 @@
 		hAxis: {baseline : 'automatic',
 				logScale : false,
 				direction : 1,
-				baselineColor : 'black',
+				baselineColor : 'black'
 				// maxValue : 'automatic',
 				// minValue : 'automatic'
 				},

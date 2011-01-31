@@ -216,7 +216,7 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
         autoLoad: true,
 	    reader: new Ext.ux.data.wbReader( {
 	        root: 'results',
-	        fields: [ {name: 'ISO Code',     mapping: 'iso2Code'},
+	        fields: [ {name: 'ISO2Code',     mapping: 'iso2Code'},
 	                  {name: 'Name',         mapping: 'name'},
 	                  {name: 'Region',       mapping: 'region'},
 	                  {name: 'AdminRegion',  mapping: 'adminregion'},
@@ -229,12 +229,13 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
         listeners: {
             load : function( store ) {
 				var markers = new Array();
+				var country_names = new Array();
             	store.each(function(record, rowIdx) {
                     marker_info = {
                         lat: record.get('latitude'),
                         lng: record.get('longitude'),
                         marker: {
-                            icon: "http://www.google.com/mapfiles/marker_green.png",
+                            icon: "http://thydzik.com/thydzikGoogleMap/markerlink.php?text=" + record.get('ISO2Code') + "&color=5680FC",
                             title: GmapInfoWindowTpl.apply(Ext.apply({msg:'Click to view more details', br:''}, record.data)),
                             infoWindow: {
                                 content: GmapInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, record.data))
@@ -244,6 +245,7 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
                     switch(true) {
                     	case (record.get(countrySortKey).id == countrySortVal):
                     		markers.push(marker_info);
+                    		country_names.push(record.get('Name'));
                     		break;
                     	default:
                     		// markers.push(marker_info);
@@ -251,6 +253,13 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
                     }
                 });
             	googleMapCmp.addMarkers(markers);
+                Ext.Msg.show({
+                    title: 'Found ' + country_names.length + ' Countries',
+                    msg: country_names.length > 0 ? country_names.join(', ') : 'None',
+                    icon: Ext.Msg.INFO,
+                    minWidth: 500,
+                    buttons: Ext.Msg.OK
+                });
             }
         }
     } );
@@ -305,14 +314,14 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
     		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
     		var newDateFormat = Ext.ux.util.getDateValFromWB(rowRecord.get('date'));
     		if (colIdx < 1) {
-    			chartData.commonData.push(new Array( new Date( newDateFormat ),
+    			chartData.commonData.push(new Array( Date.parseDate( newDateFormat, 'Y-m-d' ),
     												 parseFloat( numValue ) ));
     		} else {
     			chartData.commonData[rowIdx].push( parseFloat( numValue ) );
     		}
 
     		chartData.motionData.push(new Array(rowRecord.get('country').value,
-										new Date( newDateFormat ),
+    									Date.parseDate( newDateFormat, 'Y-m-d' ),
 										parseFloat( numValue ) ));
         });
 
@@ -358,7 +367,12 @@ Ext.extend(Ext.ux.data.wbReader, Ext.data.JsonReader, {
     var s = this.meta, Record = this.recordType,
         f = Record.prototype.fields, fi = f.items, fl = f.length, v;
 
-    var root = o[1], c = o[0].total, totalRecords = c, success = true;
+    try {
+    	var root = o[1], c = o[0].total, totalRecords = c, success = true;
+    } catch(e){
+    	var root = [], c = 0, totalrecords = 0, success = true;
+    }
+
     if(s.totalProperty){
         v = parseInt(this.getTotal(o), 10);
         if(!isNaN(v)){

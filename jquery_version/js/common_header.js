@@ -15,7 +15,7 @@
                     // console.log (' id: ' + value['id'] + ' value : ' + value['name']); 
                     break;
                 default:
-                    $("#countryCode").append("<option value=" + value['id'] + ">" + value['name'] + "</option>");
+                    $("#countryCode").append("<option value=" + value['iso2Code'] + ">" + value['name'] + "</option>");
                     // console.log (' id : ' + value['id'] + ' value : ' + value['name']); 
                     break;
             }
@@ -37,7 +37,7 @@
     });
 
     // Tabs
-    $('#tabs').tabs();
+    $('#tabs').tabs(0);
 
     var now = new Date();
     var thisYear = now.getFullYear();

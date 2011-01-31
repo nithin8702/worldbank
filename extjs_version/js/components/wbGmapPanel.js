@@ -166,7 +166,7 @@
 			                            lat: geoLoc[0],
 			                            lng: geoLoc[1],
 			                            marker: {
-			                                icon: "http://www.google.com/mapfiles/marker.png",
+			                                icon: "http://thydzik.com/thydzikGoogleMap/markerlink.php?text=KL&color=FC6355",
 			                                title: 'Click to view more details',
 			                                infoWindow: {
 			                                    content: GmapKivaLoanInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, node.data))
@@ -216,7 +216,7 @@
 				                            lat: geoLoc[0],
 				                            lng: geoLoc[1],
 				                            marker: {
-				                                icon: "http://www.google.com/mapfiles/marker.png",
+				                                icon: "http://thydzik.com/thydzikGoogleMap/markerlink.php?text=KP&color=FCF356",
 				                                title: 'Click to view more details',
 				                                infoWindow: {
 				                                    content: GmapKivaPartnersInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, node.data))
