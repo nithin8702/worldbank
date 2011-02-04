@@ -13,29 +13,49 @@ if ($pod_mode) {
 }
 
 require_once 'HTTP/Client.php';
+require_once "Cache/Lite.php";
+
+$options = array(
+    'cacheDir' => '../data/cache/',
+    'lifeTime' => 60 * 60 * 24 * 7,
+    'pearErrorMode' => CACHE_LITE_ERROR_DIE
+);
+$cache = new Cache_Lite($options);
 
 $route = substr($_SERVER["QUERY_STRING"], 6);
-$parsed_url = parse_url($route);
-if ( $parsed_url ) {
-	if( array_key_exists("host", $parsed_url) )
-	{ 
-	    $url = $route;
+
+if ($data = $cache->get($route)) {
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+    echo $data;
+} else { 
+	$parsed_url = parse_url($route);
+	if ( $parsed_url ) {
+		if( array_key_exists("host", $parsed_url) )
+		{ 
+		    $url = $route;
+		} else {
+		    $url = 'http://api.worldbank.org' . $route;
+		}
 	} else {
-	    $url = 'http://api.worldbank.org' . $route;
+		$url = 'http://api.worldbank.org' . $route;
 	}
-} else {
-	$url = 'http://api.worldbank.org' . $route;
+	$hc = new HTTP_Client();
+	
+	$hc->setMaxRedirects(1);
+	
+	$hc->get($url);
+	
+	$response = $hc->currentResponse();
+	
+	$headers = $response['headers'];
+	$data = $response['body'];
+	
+	foreach ($headers as $k => $v) {
+		header($k . ': ' . $v);
+	}
+	
+	echo $data;
+	$cache->save($data, $route);
 }
-$hc = new HTTP_Client();
-
-$hc->setMaxRedirects(1);
-
-$hc->get($url);
-
-$response = $hc->currentResponse();
-
-$data = $response['body'];
-
-echo $data;
-
-

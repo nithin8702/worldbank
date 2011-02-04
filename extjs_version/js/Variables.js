@@ -2,7 +2,8 @@ Ext.namespace('Ext.wb.variables');
 
 var wb_json_data_url_prefix = "../data/json/";
 
-var gCharts = {'datagrid':'Data Grid', 'timeline':'Timeline', 'barchart':'Bar Chart', 'linechart':'Line Chart', 'columnchart':'Column Chart', 'motionchart':'Motion Chart', 'ChartDataTable':'Data Table'};
+// TODO 'datagrid':'Data Grid', add to the gchart
+var gCharts = {'timeline':'Timeline', 'barchart':'Bar Chart', 'linechart':'Line Chart', 'columnchart':'Column Chart', 'motionchart':'Motion Chart', 'ChartDataTable':'Data Table'};
 var gMaps = {'geomap':'Geo Map', 'intensitymap':'Intensity Map', 'GeomapDataTable':'Data Table'};
 
 var worldbank_api_url = "http://api.worldbank.org";

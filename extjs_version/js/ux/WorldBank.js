@@ -265,7 +265,7 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
     } );
 }
 
-Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
+Ext.ux.data.wbChartData = function( countryMsg, columns, selectedNodeID ) {
 
 	var dataStore = new Ext.data.Store ( {
 		url: Ext.ux.util.getWBChartURL( selectedNodeID ),
@@ -279,14 +279,54 @@ Ext.ux.data.wbChartData = function( columns, selectedNodeID ) {
 	    } ),
         listeners: {
             load : function( record ) {
-                // Ext.Msg.wait('Loading data','Please wait..'); 
-				// console.log("loaded ;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-				// console.log(record);
-				return Ext.ux.data.wbChartDataFormat(columns, record);
+
+				Ext.ux.data.wbChartDataFormat(columns, record);
+
+	            var tabPanel = Ext.getCmp('wb-center-chart-content-panel');
+	            var tabPanelCount = tabPanel.items.getCount();
+	        	if (tabPanelCount > 2) {	// in case of updating base on the new data.
+	            	while(--tabPanelCount) {
+	            		tabPanel.get(tabPanelCount).destroy();
+	            	}
+	        	}
+	            if (tabPanelCount < 2) {
+	                Ext.iterate(gCharts, function(key, val) {
+	                    tabPanel.add( {
+	                        title: val,
+	                        plugins: [ new Ext.ux.Plugin.RemoteComponent( {
+				                        	url : "./js/components/G" + key + ".js",
+				                        	loadOn: 'show',
+				                            listeners: {
+					                            'success' : { fn: function() {
+
+					                            } },
+					                            'beforeadd' : { fn: function(JSON) {
+					                            	JSON['height'] = tabPanel.getHeight() - tabPanel.getFrameHeight();
+					                            	JSON['width'] = tabPanel.getWidth();
+					                            } }
+					                    	}
+	                        		} ) ]
+	                    } );
+	                } );
+	            } else {
+
+	            }
+
+	            Ext.MessageBox.hide();
+	            Ext.Msg.show({
+	                title: 'Completed Tasks',
+	                msg: countryMsg.length > 0 ? countryMsg : 'None',
+	                icon: Ext.Msg.INFO,
+	                minWidth: 500,
+	                buttons: Ext.Msg.OK
+	            });
+
             }
+        },
+        exception : function( misc )  {
+        	Ext.MessageBox.hide();
         }
     } );
-
 };
 
 Ext.ux.data.wbChartDataFormat = function( columns, record ) {
@@ -369,6 +409,8 @@ Ext.extend(Ext.ux.data.wbReader, Ext.data.JsonReader, {
 
     try {
     	var root = o[1], c = o[0].total, totalRecords = c, success = true;
+    	if (root === null)
+    		root = [];
     } catch(e){
     	var root = [], c = 0, totalrecords = 0, success = true;
     }

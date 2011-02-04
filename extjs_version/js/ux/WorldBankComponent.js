@@ -34,51 +34,40 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     },
     buttons: [{
         text: 'show graph',
-        handler: function(){
-		var indicatorID = "";
-		switch(true) {
-			case (Ext.getCmp('wb-center-source-indicator-fieldset').checkbox.dom.checked):
-				indicatorID = "source";
-				break;
-			case (Ext.getCmp('wb-center-topic-indicator-fieldset').checkbox.dom.checked):
-				indicatorID = "topic";
-				break;
-			default:
-				indicatorID = "unknown";
-				break;
-		}
+        handler: function() {
 
-        var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
-        Ext.ux.data.wbChartData( columns, indicatorID );
-            var tabPanel = Ext.getCmp('wb-center-chart-content-panel');
-            var tabPanelCount = tabPanel.items.getCount();
-        	if (tabPanelCount > 2) {	// in case of updating base on the new data.
-            	while(--tabPanelCount) {
-            		tabPanel.get(tabPanelCount).destroy();
-            	}
-        	}
-            if (tabPanelCount < 2) {
-                Ext.iterate(gCharts, function(key, val) {
-                    tabPanel.add({
-                        title: val,
-                        plugins: [ new Ext.ux.Plugin.RemoteComponent( {
-			                        	url : "./js/components/G" + key + ".js",
-			                        	loadOn: 'show',
-			                            listeners: {
-				                            'success' : { fn: function() {
+	    	Ext.MessageBox.confirm('Confirm', 'Are you sure your configuration is correct?', function(btn) {
+	    		if (btn === 'yes') {
+	    			// var myMask = new Ext.LoadMask(this.bwrap, {msg:"Please wait..."});
+	    			// myMask.show();
+	    			Ext.MessageBox.wait('Please wait....', 'Loading Chart');
+	    			var indicatorID = "";
+	    			switch(true) {
+	    				case (Ext.getCmp('wb-center-source-indicator-fieldset').checkbox.dom.checked):
+	    					indicatorID = "source";
+	    					break;
+	    				case (Ext.getCmp('wb-center-topic-indicator-fieldset').checkbox.dom.checked):
+	    					indicatorID = "topic";
+	    					break;
+	    				default:
+	    					indicatorID = "unknown";
+	    					break;
+	    			}
+	
+	                var countryMsg = '', selectedCountries = Ext.getCmp('wb-center-chart-tree-panel').getChecked();
+	                Ext.each(selectedCountries, function(country){
+	                    if(countryMsg.length > 0){
+	                    	countryMsg += ', ';
+	                    }
+	                    countryMsg += country.text;
+	                });
+	    	        var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
+	    	        Ext.ux.data.wbChartData( countryMsg, columns, indicatorID );
+	    		} else {
+	    			// console.log(btn);
+	    		}
+	    	});
 
-				                            } },
-				                            'beforeadd' : { fn: function(JSON) {
-				                            	JSON['height'] = tabPanel.getHeight() - tabPanel.getFrameHeight();
-				                            	JSON['width'] = tabPanel.getWidth();
-				                            } }
-				                    	}
-                        		} ) ]
-                    });
-                } );
-            } else {
-
-            }
 /*
                      new Ext.data.Connection({
                          url: 'js/extjs/components/Gtimeline.js',
@@ -100,22 +89,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
                              }
                          } 
                      });
-*/
-
-            var msg = '', selNodes = Ext.getCmp('wb-center-chart-tree-panel').getChecked();
-            Ext.each(selNodes, function(node){
-                if(msg.length > 0){
-                    msg += ', ';
-                }
-                msg += node.text;
-            });
-            Ext.Msg.show({
-                title: 'Completed Tasks',
-                msg: msg.length > 0 ? msg : 'None',
-                icon: Ext.Msg.INFO,
-                minWidth: 500,
-                buttons: Ext.Msg.OK
-            });
+            */
         }
     }]
 });

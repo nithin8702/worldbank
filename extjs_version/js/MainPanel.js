@@ -516,7 +516,6 @@ var geomapMainPanel = {
                          labelWidth: 45,
                          items : [{
 		         			xtype: 'compositefield',
-		        	        fieldLabel: 'Date',
 		        	        msgTarget : 'side',
 		        	        items: [ {
 	                        	xtype : 		'combo',
