@@ -22,8 +22,8 @@ $options = array(
 );
 $cache = new Cache_Lite($options);
 
-$route = substr($_SERVER["QUERY_STRING"], 6);
-
+// del http cache parameter _dc=12334234
+$route = preg_replace('/&_dc=(\d+)$/i', '', substr($_SERVER["QUERY_STRING"], 6));
 if ($data = $cache->get($route)) {
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
