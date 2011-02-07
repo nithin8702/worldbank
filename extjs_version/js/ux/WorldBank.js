@@ -158,7 +158,7 @@ Ext.ux.util.getDateValFromWB = function( dateStr ) {
 	return newDateStr;
 }
 
-Ext.ux.util.getWBChartURL = function( indicatorID ) {
+Ext.ux.util.getWBChartURL = function( indicator ) {
 
     var per_page = "&per_page=4000";
 
@@ -167,8 +167,6 @@ Ext.ux.util.getWBChartURL = function( indicatorID ) {
     Ext.iterate(wbEastCountryProperty.getSource(), function(key, val) {
     	countryList.push(val);
     });
-    var wbEastIndicatorProperty = Ext.getCmp('wb-east-indicator-property-grid');
-    var indicator = wbEastIndicatorProperty.getSource()[indicatorID + '-indicator'];
     
     var parameter = "";
     if (!Ext.getCmp('wb-center-chart-mrv-fieldset').collapsed && Ext.getCmp('wb-center-chart-mrv-number').getValue()) {
@@ -192,9 +190,7 @@ Ext.ux.util.getWBChartURL = function( indicatorID ) {
 	return "../lib/ajax-proxy.php?route=/countries/" + countryList.join(";") + "/indicators/" + indicator + "?format=json"+parameter+per_page;
 }
 
-Ext.ux.util.getWBGeomapURL = function( ) {
-
-    var wbGeoMapIndicator = Ext.getCmp('wb-center-geomap-indicator-combo').getValue();
+Ext.ux.util.getWBGeomapURL = function( wbGeoMapIndicator ) {
 
     var geoMapDate = Ext.getCmp('wb-center-geomap-date').getValue();
     var parameter = "";
@@ -210,9 +206,22 @@ Ext.ux.util.getWBGeomapURL = function( ) {
 	return "../lib/ajax-proxy.php?route=/countries/all/indicators/" + wbGeoMapIndicator + "?format=json"+parameter+per_page;
 }
 
+Ext.ux.data.wbGetColumnModelForDG = function(store, idName) {
+	/*
+	 * [
+	                // expander,
+	                {id:'company',header: "Company", width: 40, dataIndex: 'company'},
+	                {header: "Price", renderer: Ext.util.Format.usMoney, dataIndex: 'price'},
+	                {header: "Change", dataIndex: 'change'},
+	                {header: "% Change", dataIndex: 'pctChange'},
+	                {header: "Last Updated", renderer: Ext.util.Format.dateRenderer('m/d/Y'), dataIndex: 'lastChange'}
+	            ]
+	 */
+	consloe.log('executed;;;;;;;;;;;; ');
+}
 Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countrySortVal) {
 	var dataStore = new Ext.data.Store ( {
-		url: wb_json_data_url_prefix + "countries.json",
+		url: Ext.wb.variables.json_data_url_prefix + "countries.json",
         autoLoad: true,
 	    reader: new Ext.ux.data.wbReader( {
 	        root: 'results',
@@ -236,9 +245,9 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
                         lng: record.get('longitude'),
                         marker: {
                             icon: "http://thydzik.com/thydzikGoogleMap/markerlink.php?text=" + record.get('ISO2Code') + "&color=5680FC",
-                            title: GmapInfoWindowTpl.apply(Ext.apply({msg:'Click to view more details', br:''}, record.data)),
+                            title: Ext.wb.variables.GmapInfoWindowTpl.apply(Ext.apply({msg:'Click to view more details', br:''}, record.data)),
                             infoWindow: {
-                                content: GmapInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, record.data))
+                                content: Ext.wb.variables.GmapInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, record.data))
                             }
                         }
                     };
@@ -265,10 +274,10 @@ Ext.ux.data.wbGoogleMapMarkers = function(googleMapCmp, countrySortKey, countryS
     } );
 }
 
-Ext.ux.data.wbChartData = function( countryMsg, columns, selectedNodeID ) {
+Ext.ux.data.wbChartData = function( columns, indicator ) {
 
-	var dataStore = new Ext.data.Store ( {
-		url: Ext.ux.util.getWBChartURL( selectedNodeID ),
+	return new Ext.data.Store ( {
+		url: Ext.ux.util.getWBChartURL( indicator ),
 		// url: "./json/countries/AE;EG;HU;QA/indicators/BM.GSR.TOTL",
         autoLoad: true,
 	    reader: new Ext.ux.data.wbReader( {
@@ -290,7 +299,7 @@ Ext.ux.data.wbChartData = function( countryMsg, columns, selectedNodeID ) {
 	            	}
 	        	}
 	            if (tabPanelCount < 2) {
-	                Ext.iterate(gCharts, function(key, val) {
+	                Ext.iterate(Ext.wb.variables.gCharts, function(key, val) {
 	                    tabPanel.add( {
 	                        title: val,
 	                        plugins: [ new Ext.ux.Plugin.RemoteComponent( {
@@ -311,20 +320,10 @@ Ext.ux.data.wbChartData = function( countryMsg, columns, selectedNodeID ) {
 	            } else {
 
 	            }
-
-	            Ext.MessageBox.hide();
-	            Ext.Msg.show({
-	                title: 'Completed Tasks',
-	                msg: countryMsg.length > 0 ? countryMsg : 'None',
-	                icon: Ext.Msg.INFO,
-	                minWidth: 500,
-	                buttons: Ext.Msg.OK
-	            });
-
             }
         },
         exception : function( misc )  {
-        	Ext.MessageBox.hide();
+        	
         }
     } );
 };

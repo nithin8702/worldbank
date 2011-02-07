@@ -24,52 +24,52 @@
 	                {
 	                    text: 'East Asia & Pacific (developing only)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'EAP');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'EAP');
 	                	}
 	                }, {
 	                    text: 'East Asia & Pacific (all income levels)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'EAS');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'EAS');
 	                	}
 	                }, {
 	                    text: 'Europe & Central Asia (developing only)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'ECA');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'ECA');
 	                	}
 	                }, {
 	                    text: 'Europe & Central Asia (all income levels)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'ECS');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'ECS');
 	                	}
 	                }, {
 	                    text: 'Latin America & Caribbean (developing only)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'LAC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'LAC');
 	                	}
 	                }, {
 	                    text: 'Latin America & Caribbean (all income levels)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'LCN');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'LCN');
 	                	}
 	                }, {
 	                    text: 'Middle East & North Africa (all income levels)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'MEA');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'MEA');
 	                	}
 	                }, {
 	                    text: 'Middle East & North Africa (developing only)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'MNA');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'MNA');
 	                	}
 	                }, {
 	                    text: 'Sub-Saharan Africa (developing only)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'SSA');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'SSA');
 	                	}
 	                }, {
 	                    text: 'Sub-Saharan Africa (all income levels)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'Region', 'SSF');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'Region', 'SSF');
 	                	}
 	                }
 	            ]
@@ -84,47 +84,47 @@
 	                {
 	                    text: 'High income',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'HIC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'HIC');
 	                	}
 	                }, {
 	                    text: 'Heavily indebted poor countries (HIPC)',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'HPC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'HPC');
 	                	}
 	                }, {
 	                    text: 'Low income',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'LIC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'LIC');
 	                	}
 	                }, {
 	                    text: 'Lower middle income',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'LMC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'LMC');
 	                	}
 	                }, {
 	                    text: 'Low & middle income',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'LMY');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'LMY');
 	                	}
 	                }, {
 	                    text: 'Middle income',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'MIC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'MIC');
 	                	}
 	                }, {
 	                    text: 'High income: nonOECD',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'NOC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'NOC');
 	                	}
 	                }, {
 	                    text: 'High income: OECD',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'OEC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'OEC');
 	                	}
 	                }, {
 	                    text: 'Upper middle income',
 	                    handler: function(item) {
-	                		Ext.ux.data.wbGoogleMapMarkers(google_map_component, 'IncomeLevel', 'UMC');
+	                		Ext.ux.data.wbGoogleMapMarkers(Ext.wb.variables.google_map_component, 'IncomeLevel', 'UMC');
 	                	}
 	                }
 	            ]
@@ -169,17 +169,17 @@
 			                                icon: "http://thydzik.com/thydzikGoogleMap/markerlink.php?text=KL&color=FC6355",
 			                                title: 'Click to view more details',
 			                                infoWindow: {
-			                                    content: GmapKivaLoanInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, node.data))
+			                                    content: Ext.wb.variables.GmapKivaLoanInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, node.data))
 			                                }
 			                            }
 			                        });
 					            });
-					        	google_map_component.addMarkers(markers);
+					            Ext.wb.variables.google_map_component.addMarkers(markers);
 		                    }
 		                }
 		            } );
         		} else {
-        			google_map_component.clearMarkers();
+        			Ext.wb.variables.google_map_component.clearMarkers();
         		}
         	}
         }, '-', {
@@ -219,25 +219,25 @@
 				                                icon: "http://thydzik.com/thydzikGoogleMap/markerlink.php?text=KP&color=FCF356",
 				                                title: 'Click to view more details',
 				                                infoWindow: {
-				                                    content: GmapKivaPartnersInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, node.data))
+				                                    content: Ext.wb.variables.GmapKivaPartnersInfoWindowTpl.apply(Ext.apply({msg:'',br:'<br/>'}, node.data))
 				                                }
 				                            }
 				                        });
 					            	});
 					            });
-					        	google_map_component.addMarkers(markers);
+					            Ext.wb.variables.google_map_component.addMarkers(markers);
 		                    }
 		                }
 		            } );
 	        	} else {
-	        		google_map_component.clearMarkers();
+	        		Ext.wb.variables.google_map_component.clearMarkers();
 	        	}
     		}
         }, '-', {
             text: 'Clear All Icons',
             iconCls: 'clsAllIcons',
             handler: function(item, pressed) {
-        		google_map_component.clearMarkers();
+        		Ext.wb.variables.google_map_component.clearMarkers();
         	}
         }]
     },
@@ -245,7 +245,7 @@
         'mapready': function(map) {
     		// TODO find the usage of global variable in the Extjs.
     		// How to make local variable into global variable.
-    		google_map_component = map;
+    		Ext.wb.variables.google_map_component = map;
         }
     }
 }

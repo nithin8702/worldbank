@@ -99,6 +99,7 @@ Ext.ux.GVisualizationPanel = Ext.extend(Ext.Panel, {
     visualizationPkgs: {
         'intensitymap': 'IntensityMap',
         'orgchart': 'OrgChart',
+        'piechart': 'PieChart',
         'linechart': 'LineChart',
         'gauge': 'Gauge',
         'scatterchart': 'ScatterChart',

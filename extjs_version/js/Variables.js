@@ -1,17 +1,36 @@
 Ext.namespace('Ext.wb.variables');
 
-var wb_json_data_url_prefix = "../data/json/";
+Ext.wb.variables.json_data_url_prefix = "../data/json/";
 
-// TODO 'datagrid':'Data Grid', add to the gchart
-var gCharts = {'timeline':'Timeline', 'barchart':'Bar Chart', 'linechart':'Line Chart', 'columnchart':'Column Chart', 'motionchart':'Motion Chart', 'ChartDataTable':'Data Table'};
-var gMaps = {'geomap':'Geo Map', 'intensitymap':'Intensity Map', 'GeomapDataTable':'Data Table'};
+// TODO 'piechart':'Pie Chart', 
+Ext.wb.variables.gCharts = {'datagrid':'Data Grid', 'timeline':'Timeline', 'barchart':'Bar Chart', 'linechart':'Line Chart', 'columnchart':'Column Chart', 'motionchart':'Motion Chart', 'ChartDataTable':'Data Table'};
+Ext.wb.variables.gMaps = {'geomap':'Geo Map', 'intensitymap':'Intensity Map', 'GeomapDataTable':'Data Table'};
 
-var worldbank_api_url = "http://api.worldbank.org";
-var worldbank_api_jsonp = "?format=jsonP&prefix=Getdata";
+Ext.wb.variables.api_url = "http://api.worldbank.org";
+Ext.wb.variables.api_jsonp_postfix = "?format=jsonP&prefix=Getdata";
 
-var google_map_component = null;
+Ext.wb.variables.chart_line_series = {
+								    	type:'line',
+								        displayName: '',
+								        yField: '',
+								        style: {
+								            color: 0x15428B
+								        }
+								    };
+Ext.wb.variables.chart_column_series = {
+								        type: 'column',
+								        displayName: '',
+								        yField: '',
+								        style: {
+								            image:'../lib/ext-3.3.1/examples/chart/bar.gif',
+								            mode: 'stretch',
+								            color:0x99BBE8
+								        }
+								    };
 
-var GmapInfoWindowTpl = new Ext.XTemplate('Name: {Name}\n{br} ' +
+Ext.wb.variables.google_map_component = null;
+
+Ext.wb.variables.GmapInfoWindowTpl = new Ext.XTemplate('Name: {Name}\n{br} ' +
 										'Region: {[values.Region.value]}\n{br}' +
 										'Admin Region: {[values.AdminRegion.value]}\n{br}' +
 										'Income Level: {[values.IncomeLevel.value]}\n{br}' +
@@ -34,7 +53,7 @@ fields: [ {name: 'name',           mapping: 'name'},
           {name: 'status',         mapping: 'status'},
           {name: 'sector',         mapping: 'sector'} ]
 */
-var GmapKivaLoanInfoWindowTpl = new Ext.XTemplate('Name: {name}\n{br} ' +
+Ext.wb.variables.GmapKivaLoanInfoWindowTpl = new Ext.XTemplate('Name: {name}\n{br} ' +
 												'Description : {description}\n{br}' +
 												'Funded Amount : {funded_amount}\n{br}' +
 												'Borrower Count : {borrower_count}\n{br}' +
@@ -59,7 +78,7 @@ var GmapKivaLoanInfoWindowTpl = new Ext.XTemplate('Name: {name}\n{br} ' +
 {name: 'total_amount_raised', mapping: 'total_amount_raised'},
 {name: 'loans_posted',       mapping: 'loans_posted'}
 */
-var GmapKivaPartnersInfoWindowTpl = new Ext.XTemplate('Name: {name}\n{br} ' +
+Ext.wb.variables.GmapKivaPartnersInfoWindowTpl = new Ext.XTemplate('Name: {name}\n{br} ' +
 												'Status: {status}\n{br}' +
 												'Rating: {rating}\n{br}' +
 												'Delinquency Rate: {delinquency_rate}\n{br}' +

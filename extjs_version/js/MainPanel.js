@@ -54,12 +54,12 @@ var wbChartIndicatorPanel = {
 		            id : 'wb-center-source-combo',
 		            fieldLabel : 'Source',
 		            name:  'source',
-		            store : new Ext.ux.component.wbDataStore ( {url: wb_json_data_url_prefix+'sources.json'}),
+		            store : new Ext.ux.component.wbDataStore ( {url: Ext.wb.variables.json_data_url_prefix+'sources.json'}),
 		            listeners : {
 		                 change : function( field, newValue, oldValue ) {
 		                     var wbIndicatorCombo = Ext.getCmp('wb-center-source-indicator-combo');
 		                     // in case of source, file name is indicators pl
-		                     var indicator_url = wb_json_data_url_prefix+'source/' + newValue + '/indicators.json';
+		                     var indicator_url = Ext.wb.variables.json_data_url_prefix+'source/' + newValue + '/indicators.json';
 		                     wbIndicatorCombo.setDisabled(true);
 		                     wbIndicatorCombo.setValue('');
 		                     // wbIndicatorCombo.store.proxy.setUrl(indicator_url); 
@@ -101,7 +101,7 @@ var wbChartIndicatorPanel = {
                 fieldLabel : 'Topic ',
                 id : 'wb-center-topic-combo',
                 store : new Ext.ux.component.wbDataStore ( {
-                        url: wb_json_data_url_prefix + 'topics.json',
+                        url: Ext.wb.variables.json_data_url_prefix + 'topics.json',
                         reader: new Ext.ux.data.wbReader({
                             root: 'results',
                             fields: [{name: 'value', mapping: 'id'},
@@ -113,7 +113,7 @@ var wbChartIndicatorPanel = {
                     change : function( field, newValue, oldValue ) {
                        var wbIndicatorCombo = Ext.getCmp('wb-center-topic-indicator-combo');
                        // in case of topic, file name is indicator
-                       var indicator_url = wb_json_data_url_prefix +'topic/' + newValue + '/indicator.json';
+                       var indicator_url = Ext.wb.variables.json_data_url_prefix +'topic/' + newValue + '/indicator.json';
                        wbIndicatorCombo.setDisabled(true);
                        wbIndicatorCombo.setValue('');
                        wbIndicatorCombo.store.removeAll();
@@ -560,66 +560,79 @@ var geomapMainPanel = {
                         	 xtype: 'button',
                              text: 'show geomap',
                              handler: function(evt) {
-								var geoMapTabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
-                        		var dataStore = new Ext.data.Store ( {
-                        			url: Ext.ux.util.getWBGeomapURL(),
-                        	        autoLoad: true,
-                        		    reader: new Ext.ux.data.wbReader( {
-                        		        root: 'results',
-                        		        fields: [ {name: 'country', mapping: 'country'},
-                        		                  {name: 'value', mapping: 'value'} ]
-                        		    } ),
-                        	        listeners: {
-                        	            load : function( records ) {
-                        					var geoMapData = new Array();
-                        					records.each( function(record) {
-                        						var recVal = record.get('value');
-                        			    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
-                        						geoMapData.push( new Array( record.get('country').id, parseFloat(numValue), record.get('country').value ) );
-                        					});
-                        					new Ext.data.ArrayStore({
-                        				        autoDestroy: true,
-                        				        storeId: 'wbGGeomapDataStore',
-                        				        // idIndex: 1,  
-                        				        fields: [ {name: 'country code', type: 'string'}, {name: 'value', type: 'float'}, {name: 'country name', type: 'string'} ],
-                        				        data: geoMapData
-                        				    }); 
-                        					new Ext.data.ArrayStore({
-                        				        autoDestroy: true,
-                        				        storeId: 'wbGIntensitymapDataStore',
-                        				        // idIndex: 1,  
-                        				        fields: [ {name: 'country', type: 'string'}, {name: 'value', type: 'float'} ],
-                        				        data: geoMapData
-                        				    }); 
-                        					geoMapTabPanel.activate(0);
-                        				}
-                        	        }
-                        	    } );
-
-					            var geoMapTabPanelCount = geoMapTabPanel.items.getCount();
-					        	if (geoMapTabPanelCount > 1) {	// in case of updating base on the new data.
-					            	while(geoMapTabPanelCount--) {
-					            		geoMapTabPanel.get(geoMapTabPanelCount).destroy();
-					            	}
-					        	}
-					            if (geoMapTabPanelCount < 1) {
-									Ext.iterate(gMaps, function(key, val) {
-										geoMapTabPanel.add({
-									    	title: val,
-									     	id: 'wb-center-' + key + '-content-tabpanel',
-											plugins: [new Ext.ux.Plugin.RemoteComponent({
-									            url : './js/components/G' + key + '.js',
-									            loadOn: 'show',
-									            listeners: {
-									                'beforeadd' : {fn: function(JSON) {
-														JSON['height'] = geoMapTabPanel.getHeight() - geoMapTabPanel.getFrameHeight();
-														JSON['width'] = geoMapTabPanel.getWidth();
-									                } }
-									    		}
-									        })]
+                        	    var wbGeoMapIndicator = Ext.getCmp('wb-center-geomap-indicator-combo').getValue();
+                        	    if ( Ext.isEmpty(wbGeoMapIndicator) ) {
+                        	    	var sb = Ext.getCmp('wb-main-panel-statusbar');
+            	    		        Ext.MessageBox.show({
+            	    		            title: 'Indicator Selection Error',
+            	    		            msg: 'You did not select indicator!',
+            	    		            buttons: Ext.MessageBox.OK,
+            	    		            icon: Ext.MessageBox.ERROR
+            	    		        });
+            	    		        sb.setStatus({ text: 'Oops!', iconCls: 'x-status-error', clear: true });
+                        	    } else {
+									var geoMapTabPanel = Ext.getCmp('wb-center-geomap-tabpanel');
+	                        		var dataStore = new Ext.data.Store ( {
+	                        			url: Ext.ux.util.getWBGeomapURL(wbGeoMapIndicator),
+	                        	        autoLoad: true,
+	                        		    reader: new Ext.ux.data.wbReader( {
+	                        		        root: 'results',
+	                        		        fields: [ {name: 'country', mapping: 'country'},
+	                        		                  {name: 'value', mapping: 'value'} ]
+	                        		    } ),
+	                        	        listeners: {
+	                        	            load : function( records ) {
+	                        					var geoMapData = new Array();
+	                        					records.each( function(record) {
+	                        						var recVal = record.get('value');
+	                        			    		var numValue = (isNaN( recVal ) || !recVal ) ? 0 : recVal;
+	                        						geoMapData.push( new Array( record.get('country').id, parseFloat(numValue), record.get('country').value ) );
+	                        					});
+	                        					new Ext.data.ArrayStore({
+	                        				        autoDestroy: true,
+	                        				        storeId: 'wbGGeomapDataStore',
+	                        				        // idIndex: 1,  
+	                        				        fields: [ {name: 'country code', type: 'string'}, {name: 'value', type: 'float'}, {name: 'country name', type: 'string'} ],
+	                        				        data: geoMapData
+	                        				    }); 
+	                        					new Ext.data.ArrayStore({
+	                        				        autoDestroy: true,
+	                        				        storeId: 'wbGIntensitymapDataStore',
+	                        				        // idIndex: 1,  
+	                        				        fields: [ {name: 'country', type: 'string'}, {name: 'value', type: 'float'} ],
+	                        				        data: geoMapData
+	                        				    }); 
+	                        					geoMapTabPanel.activate(0);
+	                        				}
+	                        	        }
+	                        	    } );
+	                        		new Ext.LoadMask(geoMapTabPanel.bwrap, Ext.apply({store:dataStore}, true));
+	
+						            var geoMapTabPanelCount = geoMapTabPanel.items.getCount();
+						        	if (geoMapTabPanelCount > 1) {	// in case of updating base on the new data.
+						            	while(geoMapTabPanelCount--) {
+						            		geoMapTabPanel.get(geoMapTabPanelCount).destroy();
+						            	}
+						        	}
+						            if (geoMapTabPanelCount < 1) {
+										Ext.iterate(Ext.wb.variables.gMaps, function(key, val) {
+											geoMapTabPanel.add({
+										    	title: val,
+										     	id: 'wb-center-' + key + '-content-tabpanel',
+												plugins: [new Ext.ux.Plugin.RemoteComponent({
+										            url : './js/components/G' + key + '.js',
+										            loadOn: 'show',
+										            listeners: {
+										                'beforeadd' : {fn: function(JSON) {
+															JSON['height'] = geoMapTabPanel.getHeight() - geoMapTabPanel.getFrameHeight();
+															JSON['width'] = geoMapTabPanel.getWidth();
+										                } }
+										    		}
+										        })]
+											});
 										});
-									});
-					            }
+						            }
+                        	    }
                              }
                          } ]
                      } ]
@@ -674,7 +687,7 @@ var mainContentPanel = {
 	        })]
 	    } ],
     bbar: new Ext.ux.StatusBar({
-        id: 'main-panel-statusbar',
+        id: 'wb-main-panel-statusbar',
         defaultText: 'Default status text',
         //defaultIconCls: 'default-icon',
         // values to set initially:
@@ -685,7 +698,7 @@ var mainContentPanel = {
             {
                 text: 'Show Warning & Clear',
                 handler: function (){
-                    var sb = Ext.getCmp('main-panel-statusbar');
+                    var sb = Ext.getCmp('wb-main-panel-statusbar');
                     sb.setStatus({
                         text: 'Oops!',
                         iconCls: 'x-status-error',
@@ -696,7 +709,7 @@ var mainContentPanel = {
             {
                 text: 'Show Busy',
                 handler: function (){
-                    var sb = Ext.getCmp('main-panel-statusbar');
+                    var sb = Ext.getCmp('wb-main-panel-statusbar');
                     // Set the status bar to show that something is processing:
                     sb.showBusy();
                 }
@@ -704,7 +717,7 @@ var mainContentPanel = {
             {
                 text: 'Clear status',
                 handler: function (){
-                    var sb = Ext.getCmp('main-panel-statusbar');
+                    var sb = Ext.getCmp('wb-main-panel-statusbar');
                     // once completed
                     sb.clearStatus(); 
                 }

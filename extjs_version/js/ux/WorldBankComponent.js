@@ -9,7 +9,7 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     animate:true,
     enableDD:true,
     containerScroll: true,
-    loader: new Ext.ux.tree.wbTreeLoader({dataUrl: wb_json_data_url_prefix+'countries.json'}),
+    loader: new Ext.ux.tree.wbTreeLoader({dataUrl: Ext.wb.variables.json_data_url_prefix+'countries.json'}),
     root: {
         nodeType: 'async',
         text: 'Ext JS',
@@ -34,13 +34,9 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
     },
     buttons: [{
         text: 'show graph',
-        handler: function() {
-
+        handler: function(cmp) {
 	    	Ext.MessageBox.confirm('Confirm', 'Are you sure your configuration is correct?', function(btn) {
 	    		if (btn === 'yes') {
-	    			// var myMask = new Ext.LoadMask(this.bwrap, {msg:"Please wait..."});
-	    			// myMask.show();
-	    			Ext.MessageBox.wait('Please wait....', 'Loading Chart');
 	    			var indicatorID = "";
 	    			switch(true) {
 	    				case (Ext.getCmp('wb-center-source-indicator-fieldset').checkbox.dom.checked):
@@ -53,16 +49,30 @@ Ext.ux.component.wbCountryTreePanel = Ext.extend(Ext.tree.TreePanel, {
 	    					indicatorID = "unknown";
 	    					break;
 	    			}
-	
-	                var countryMsg = '', selectedCountries = Ext.getCmp('wb-center-chart-tree-panel').getChecked();
-	                Ext.each(selectedCountries, function(country){
-	                    if(countryMsg.length > 0){
-	                    	countryMsg += ', ';
-	                    }
-	                    countryMsg += country.text;
-	                });
-	    	        var columns = Ext.getCmp('wb-east-country-property-grid').getSource();
-	    	        Ext.ux.data.wbChartData( countryMsg, columns, indicatorID );
+
+	    	        var selected_countries = Ext.getCmp('wb-east-country-property-grid').getStore().getCount();
+	    	        var indicator = Ext.getCmp('wb-east-indicator-property-grid').getSource()[indicatorID + '-indicator'];
+	    	        var sb = Ext.getCmp('wb-main-panel-statusbar');
+	    	        if (selected_countries < 1) {
+	    		        Ext.MessageBox.show({
+	    		            title: 'Country Selection Error',
+	    		            msg: 'You did not select any country!',
+	    		            buttons: Ext.MessageBox.OK,
+	    		            icon: Ext.MessageBox.ERROR
+	    		        });
+	                    sb.setStatus({ text: 'Oops!', iconCls: 'x-status-error', clear: true });
+	    	        } else if ( !Ext.isDefined(indicator) ) {
+	    		        Ext.MessageBox.show({
+	    		            title: 'Indicator Selection Error',
+	    		            msg: 'You did not select indicator!',
+	    		            buttons: Ext.MessageBox.OK,
+	    		            icon: Ext.MessageBox.ERROR
+	    		        });
+	    		        sb.setStatus({ text: 'Oops!', iconCls: 'x-status-error', clear: true });
+	    	        } else {
+	    	        	var dataStore = Ext.ux.data.wbChartData( Ext.getCmp('wb-east-country-property-grid').getSource(), indicator );
+	    	        	new Ext.LoadMask(Ext.getCmp('wb-center-chart-content-panel').bwrap, Ext.apply({store:dataStore}, true));
+	    	        }
 	    		} else {
 	    			// console.log(btn);
 	    		}
