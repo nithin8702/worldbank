@@ -331,7 +331,6 @@ Ext.ux.data.wbChartData = function( columns, indicator ) {
 Ext.ux.data.wbChartDataFormat = function( columns, record ) {
 	var chartData = {'commonData' : new Array(), 'motionData' : new Array()};
     var colIdx = 0;
-    // columns = {'AE': 'AE', 'EG' : 'EG', 'HU' : 'HU', 'QA' : 'QA'};
 
     record.singleSort('date');
     var store_fields = new Array();
@@ -370,6 +369,16 @@ Ext.ux.data.wbChartDataFormat = function( columns, record ) {
     	colIdx++;
     });
 
+    new Ext.data.Store({
+    	storeId: 'wbExtjsGridDataStore',
+        proxy: new Ext.ux.data.PagingMemoryProxy(chartData.commonData),
+        remoteSort:true,
+        sortInfo: {field:'date', direction:'ASC'},
+        reader: new Ext.data.ArrayReader({
+        	fields: store_fields
+        })
+    });
+    
     new Ext.data.ArrayStore({
         autoDestroy: true,
         storeId: 'wbGCommonDataStore',

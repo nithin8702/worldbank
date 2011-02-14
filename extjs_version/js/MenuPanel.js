@@ -42,6 +42,7 @@ var leftTreeMenuPanel = {
                 				Ext.getCmp('wb-west-menu-panel').toggleCollapse(); // close west menu panel
                 				Ext.getCmp('wb-west-menu-panel').hideCollapseTool = false;
                 			}
+                			Ext.getCmp('wb-center-chart-content-panel').bwrap.unmask();
                 			break;
                 	}
                     Ext.getCmp('wb-center-content-panel').layout.setActiveItem('wb-center-' + node.id + '-content-panel');

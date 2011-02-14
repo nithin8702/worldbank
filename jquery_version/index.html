@@ -3,26 +3,26 @@
   <head>
     <title>World Bank Data visualization by topic developed by pyg</title>
 
-    <link type="text/css" media="all" href="./css/elastic.css" rel="stylesheet" />
+    <link type="text/css" media="all" href="../lib/elastic.2.0.3/production/elastic.css" rel="stylesheet" />
     <link type="text/css" media="all" href="./css/default.css" rel="stylesheet" />
-    <link type="text/css" href="http://localhost/lib/jquery-ui/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />	
-    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.css" rel="stylesheet"/>
-    <link type="text/css" href="http://localhost/worldbank/css/widget/jquery.multiselect.filter.css" rel="stylesheet"/>
+    <link type="text/css" href="../lib/jquery-ui/css/ui-lightness/jquery-ui-1.8.8.custom.css" rel="stylesheet" />	
+    <link type="text/css" href="./css/widget/jquery.multiselect.css" rel="stylesheet"/>
+    <link type="text/css" href="./css/widget/jquery.multiselect.filter.css" rel="stylesheet"/>
     <link type="text/css" href="./css/redmond/jquery-ui-1.7.1.custom.css" rel="stylesheet" />
     <link type="text/css" href="./css/ui.slider.extras.css" rel="stylesheet"/>
 
-    <script type="text/javascript" src="http://localhost/lib/jquery-1.4.4.js"></script>
-    <script type="text/javascript" src="./js/elastic.js"></script>
-    <script type="text/javascript" src="http://localhost/lib/jquery-ui/js/jquery-ui-1.8.7.custom.min.js"></script>
-    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.js"></script>
-    <script type="text/javascript" src="http://localhost/worldbank/js/widget/jquery.multiselect.filter.js"></script>
+    <script type="text/javascript" src="../lib/jquery-1.4.4.js"></script>
+    <script type="text/javascript" src="../lib/elastic.2.0.3/production/elastic.js"></script>
+    <script type="text/javascript" src="../lib/jquery-ui/js/jquery-ui-1.8.8.custom.min.js"></script>
+    <script type="text/javascript" src="./js/widget/jquery.multiselect.js"></script>
+    <script type="text/javascript" src="./js/widget/jquery.multiselect.filter.js"></script>
     <script type="text/javascript" src="./js/selectToUISlider.jQuery.js"></script>
 
-    <script type="text/javascript" src="http://localhost/worldbank/js/columns_info.js"></script>
+    <script type="text/javascript" src="./js/columns_info.js"></script>
 
-    <script type="text/javascript" src="http://localhost/worldbank/lib/wb_converter.js"></script>
-    <script type="text/javascript" src="http://localhost/worldbank/lib/print_r.js"></script>
-    <script type="text/javascript" src="http://localhost/worldbank/js/menu_right.js"></script>
+    <script type="text/javascript" src="./js/wb_converter.js"></script>
+    <script type="text/javascript" src="./js/print_r.js"></script>
+    <script type="text/javascript" src="./js/menu_right.js"></script>
 
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 
@@ -47,29 +47,30 @@
         // google.load('visualization', '1', {'packages' : ['table', 'corechart', 'geomap']});
     });
 
+
     $(document).ready(function(){
 
-        // loading Dialog
-	// create the loading window and set autoOpen to false
-	$("#loadingDialog").dialog({
-		autoOpen: false,	// set this to false so we can manually open it
-		dialogClass: "loadingScreenWindow",
-		closeOnEscape: false,
-		draggable: false,
-		width: 460,
-		minHeight: 50, 
-		modal: true,
-		buttons: {},
-		resizable: false,
-		open: function() {
-			// scrollbar fix for IE
-			$('body').css('overflow','hidden');
-		},
-		close: function() {
-			// reset overflow
-			$('body').css('overflow','auto');
-		}
-	}); // end of dialog
+	    // loading Dialog
+		// create the loading window and set autoOpen to false
+		$("#loadingDialog").dialog({
+			autoOpen: false,	// set this to false so we can manually open it
+			dialogClass: "loadingScreenWindow",
+			closeOnEscape: false,
+			draggable: false,
+			width: 460,
+			minHeight: 50, 
+			modal: true,
+			buttons: {},
+			resizable: false,
+			open: function() {
+				// scrollbar fix for IE
+				$('body').css('overflow','hidden');
+			},
+			close: function() {
+				// reset overflow
+				$('body').css('overflow','auto');
+			}
+		}); // end of dialog
         $("#loadingDialog").html('Please wait...');
         $("#loadingDialog").dialog('option', 'title', 'Loading');
 

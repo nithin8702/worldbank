@@ -1,6 +1,6 @@
 {
 	id: 'wb-main-extjs-grid-chart-panel',
-    title: 'Employee Salary by Month',
+    title: 'Line / Column Chart',
     layout:'vbox',
     layoutConfig: {
         align : 'stretch',
@@ -17,9 +17,9 @@
     		id: 'wb-main-extjs-data-grid-columnchart',
             xtype: 'columnchart',
             url:'../lib/ext-3.3.1/resources/charts.swf',
-            store : Ext.StoreMgr.lookup('wbGCommonDataStore'),
+            store : Ext.StoreMgr.lookup('wbExtjsGridDataStore'),
             xField: 'date',
-            xAxis: new Ext.chart.TimeAxis({
+            xAxis: new Ext.chart.CategoryAxis({
                 displayName: 'Date',
                 labelRenderer : Ext.util.Format.dateRenderer('Y-m-d')
             }),
@@ -28,7 +28,7 @@
                 labelRenderer : Ext.util.Format.numberRenderer('0,0')
             }),
             tipRenderer : function(chart, record, index, series){
-                return Ext.util.Format.number(record.data[series.yField], '$0,0') + ' in ' + record.data.date;
+                return Ext.util.Format.number(record.data[series.yField], '0,0') + ' in ' + Ext.util.Format.date(record.data.date, 'Y-m-d');
             },
             // style chart so it looks pretty
             chartStyle: {
@@ -71,8 +71,8 @@
             },
             series: [{
 		        type: 'column',
-		        displayName: Ext.StoreMgr.lookup('wbGCommonDataStore').fields.itemAt(1).name,
-		        yField: Ext.StoreMgr.lookup('wbGCommonDataStore').fields.itemAt(1).name,
+		        displayName: Ext.StoreMgr.lookup('wbExtjsGridDataStore').fields.itemAt(1).name,
+		        yField: Ext.StoreMgr.lookup('wbExtjsGridDataStore').fields.itemAt(1).name,
 		        style: {
 		            image:'../lib/ext-3.3.1/examples/chart/bar.gif',
 		            mode: 'stretch',
@@ -83,14 +83,18 @@
     		id: 'wb-main-extjs-data-grid-linechart',
             xtype: 'linechart',
             url:'../lib/ext-3.3.1/resources/charts.swf',
-            store : Ext.StoreMgr.lookup('wbGCommonDataStore'),
+            store : Ext.StoreMgr.lookup('wbExtjsGridDataStore'),
             xField: 'date',
+            xAxis: new Ext.chart.CategoryAxis({
+                displayName: 'Date',
+                labelRenderer : Ext.util.Format.dateRenderer('Y-m-d')
+            }),
             yAxis: new Ext.chart.NumericAxis({
                 displayName: 'Value',
                 labelRenderer : Ext.util.Format.numberRenderer('0,0')
             }),
             tipRenderer : function(chart, record, index, series){
-    			return Ext.util.Format.number(record.data[series.yField], '$0,0') + ' in ' + record.data.date;
+    			return Ext.util.Format.number(record.data[series.yField], '0,0') + ' in ' + Ext.util.Format.date(record.data.date, 'Y-m-d');
             },
             // style chart so it looks pretty
             chartStyle: {
@@ -133,8 +137,8 @@
             },
             series: [{
 		    	type:'line',
-		        displayName: Ext.StoreMgr.lookup('wbGCommonDataStore').fields.itemAt(1).name,
-		        yField: Ext.StoreMgr.lookup('wbGCommonDataStore').fields.itemAt(1).name,
+		        displayName: Ext.StoreMgr.lookup('wbExtjsGridDataStore').fields.itemAt(1).name,
+		        yField: Ext.StoreMgr.lookup('wbExtjsGridDataStore').fields.itemAt(1).name,
 		        style: {
 		            color: 0x15428B
 		        }
@@ -167,7 +171,7 @@
         }),
         listeners: {
         	beforerender : function( cmp ) { 
-        		var store = Ext.StoreMgr.lookup('wbGCommonDataStore');
+        		var store = Ext.StoreMgr.lookup('wbExtjsGridDataStore');
         		var country_btn = cmp.bottomToolbar.get('wb-main-extjs-data-grid-chart-panel-bbar-country-btn');
 
         		store.fields.each(function(field, rowIdx) {
@@ -192,22 +196,7 @@
         				
         			}
         		});
-        		
-        		/*
-        		var field_name = store.fields.itemAt(1).name;
-        		cmp.items.each(function(item, rowIdx) {
-        			if (rowIdx > 0) { // line
-        				Ext.wb.variables.chart_line_series.displayName = field_name;
-	        			Ext.wb.variables.chart_line_series.yField = field_name;
-        				item.setSeries(new Array(Ext.wb.variables.chart_line_series));
-        			} else {  // column
-        				Ext.wb.variables.chart_column_series.displayName = field_name;
-	        			Ext.wb.variables.chart_column_series.yField = field_name;
-        				item.setSeries(new Array(Ext.wb.variables.chart_column_series));
-        			}
-        		});
-        		*/
-        		// cmp.layout.activeItem.setSeries( new Array(Ext.wb.variables.chart_column_series) );
+        		store.load({params:{start:0, limit:100}});
         	}
         }
     }, {
@@ -220,12 +209,12 @@
         // plugins: expander,
         collapsible: true,
         animCollapse: false,
-        title: 'Expander Rows, Collapse and Force Fit',
+        title: 'Grid data for the chart',
         iconCls: 'icon-grid',
         // paging bar on the bottom
         bbar: new Ext.PagingToolbar({
             pageSize: 25,
-            store: Ext.StoreMgr.lookup('wbGCommonDataStore'),
+            store: Ext.StoreMgr.lookup('wbExtjsGridDataStore'),
             displayInfo: true,
             displayMsg: 'Displaying topics {0} - {1} of {2}',
             emptyMsg: "No datas to display",
